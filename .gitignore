@@ -110,3 +110,4 @@ dist
 keys
 credentials.json
 token.pickle
+config.json
