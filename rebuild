@@ -1,0 +1,11 @@
+#!/bin/bash
+docker build -t mtsev/seba .
+
+echo Delete old container...
+docker rm -f seba
+
+echo Run new container...
+docker run -d \
+	--name seba \
+	--restart=always \
+	mtsev/seba
