@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const { prefix, token, channels } = require('./config.json');
+const { prefix, token, server, channels } = require('./config.json');
 const { getPad } = require('./random.js');
 
 // Output to console on successful login
@@ -29,24 +29,25 @@ client.on('message', message => {
 	if (command === 'verify') {
 
         var botReply;
-        var member = message.member;
 
         // Ignore messages outside of DM or verification channel
         if (message.guild != null && message.channel.id != channels.verify) return;
 
         // Invalid code entered
-        if (!args.match(/[\d]{6}/)) {
-            botReply = "Please enter a valid verification code. It should be in this format:\n" + 
-                    "`!verify xxxxxx`";
+        if (!args[0].match(/[\d]{6}/)) {
+            botReply = "Please enter a valid verification code. " +
+                    "It should be in this format: `!verify xxxxxx`";
         }
 
         // Verification successful
-        else if (args == getPad(member.user.tag, 6)) {
+        else if (args == getPad(message.author.tag, 6)) {
             botReply = "Congratulations, you have been successfully verified. " +
-                    "Welcome to **lo-fi society**! You may now chat in the server.";
+                    "**Welcome to lo-fi society**! You may now chat in the server.";
             
             // Add verified role to member
-            let role = message.guild.roles.find(r => r.name === "verified");
+            let guild = client.guilds.get(server);
+            let role = guild.roles.find(r => r.name === "verified");
+            let member = guild.members.get(message.author.id);
             member.addRole(role).catch(console.error);
         }
 
@@ -59,11 +60,9 @@ client.on('message', message => {
         }
 
         // Send message to member
-        member.send(botReply);
+        message.author.send(botReply);
     }
     
 });
 
 client.login(token);
-
-console.log(getPad("NaCl#9482",6));
