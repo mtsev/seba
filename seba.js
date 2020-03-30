@@ -11,10 +11,8 @@ client.on('ready', () => {
 
 // Welcome message for new members
 client.on('guildMemberAdd', member => {
-    var message = `Welcome to UNSW lo-fi society, ${member}! \
-            Before you can talk in the server, you will have to verify yourself. \
-            Please read the <#${channels.rules}> for instructions \
-            and introduce yourself in <#${channels.intro}> once you're done!`
+    var message = `Welcome to lo-fi society, ${member}! ` +
+            `Please read the <#${channels.rules}> and verify yourself to start chatting.`;
     client.channels.get(channels.welcome).send(message);
 });
 
