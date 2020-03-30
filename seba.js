@@ -34,7 +34,7 @@ client.on('message', message => {
         if (message.guild != null && message.channel.id != channels.verify) return;
 
         // Invalid code entered
-        if (!args[0].match(/[\d]{6}/)) {
+        if (args.length == 0 || !args[0].match(/[\d]{6}/)) {
             botReply = "Please enter a valid verification code. " +
                     "It should be in this format: `!verify xxxxxx`";
         }
@@ -42,7 +42,7 @@ client.on('message', message => {
         // Verification successful
         else if (args == getPad(message.author.tag, 6)) {
             botReply = "Congratulations, you have been successfully verified. " +
-                    "**Welcome to lo-fi society**! You may now chat in the server.";
+                    "**Welcome to lo-fi society!** You may now chat in the server.";
             
             // Add verified role to member
             let guild = client.guilds.get(server);
