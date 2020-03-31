@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const { prefix, token, server, channels } = require('./config.json');
+const { prefix, token, server, channels, roles } = require('./config.json');
 const { getPad } = require('./random.js');
 
 // Output to console on successful login
@@ -11,7 +11,7 @@ client.on('ready', () => {
 
 // Welcome message for new members
 client.on('guildMemberAdd', member => {
-    var message = `Welcome to lo-fi society, ${member}! ` +
+    var message = `Welcome to ${server.name}, ${member}! ` +
             `Please read the <#${channels.rules}> and verify yourself to start chatting.`;
     client.channels.get(channels.welcome).send(message);
 });
@@ -40,11 +40,11 @@ client.on('message', message => {
         // Verification successful
         else if (args == getPad(message.author.tag, 6)) {
             botReply = "Congratulations, you have been successfully verified. " +
-                    "**Welcome to lo-fi society!** You may now chat in the server.";
+                    `**Welcome to ${server.name}!** You may now chat in the server.`;
             
             // Add verified role to member
-            let guild = client.guilds.get(server);
-            let role = guild.roles.find(r => r.name === "verified");
+            let guild = client.guilds.get(server.id);
+            let role = guild.roles.get(roles.verified);
             let member = guild.members.get(message.author.id);
             member.addRole(role).catch(console.error);
         }
@@ -54,7 +54,7 @@ client.on('message', message => {
             botReply = "**Sorry, your verification code was incorrect. Please try the following:**\n" +
                     "1. Check that the code was entered correctly and try again.\n" +
                     "2. Check that your Discord tag is the same as what you entered into the form and try again.\n" +
-                    "3. Ping an @exec in the #verification channel or email us at unswlofisoc@gmail.com if it's still not working.";
+                    `3. Ping an @exec in the #verification channel or email us at ${server.email} if it's still not working.`;
         }
 
         // Send message to member
