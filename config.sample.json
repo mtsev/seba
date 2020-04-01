@@ -1,0 +1,18 @@
+{
+	"prefix": "!",
+    "token": "",
+    "server": {
+        "id": "",
+        "name": "",
+        "email": ""
+    },
+    "channels": {
+        "welcome": "",
+        "rules": "",
+        "verify": ""
+    },
+    "roles": {
+        "verified": "",
+        "exec": ""
+    }
+}
