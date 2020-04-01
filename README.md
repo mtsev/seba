@@ -1,9 +1,10 @@
 # seba
-Bot for UNSW lo-fi society Discord server.
+Verification bot for UNSW lo-fi society's Discord server.
 
-* Welcomes new members when they join.
-* Verifies members using an emailed code (google script) and updates their role.
+* Welcomes new members in dedicated welcome channel when they join the server.
+* Verifies members using an emailed code ([google script](https://github.com/mtsev/seba-form-script)) and updates their role.
 
+## Configuration
 Rename the sample config file `config.sample.json` to `config.json` and set the following values.
 
 * `prefix` is the string proceeding a bot command.
@@ -19,3 +20,4 @@ Rename the sample config file `config.sample.json` to `config.json` and set the 
 * `roles` has the IDs of user roles in your server:
     - `verified` is the ID of the role to assign to members once they verify.
     - `exec` is the ID of the exec or admin role to use privileged bot commands.
+* `seed` is a secret value used to generate the verification code. Must be the same as the google script seed value.

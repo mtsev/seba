@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const { prefix, token, server, channels, roles } = require('./config.json');
+const { prefix, token, server, channels, roles, seed } = require('./config.json');
 const { getPad } = require('./random.js');
 
 // Output to console on successful login
@@ -38,7 +38,7 @@ client.on('message', message => {
         }
 
         // Verification successful
-        else if (args == getPad(message.author.tag, 6)) {
+        else if (args == getPad(message.author.tag + seed, 6)) {
             botReply = "Congratulations, you have been successfully verified. " +
                     `**Welcome to ${server.name}!** You may now chat in the server.`;
             
