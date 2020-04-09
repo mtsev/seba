@@ -12,6 +12,8 @@ module.exports = {
 async function execute(client, message, args) {
 
     let botReply;
+    const guild = await client.guilds.get(server.id);
+    const member = await guild.members.get(message.author.id);
 
     // Ignore messages outside of DM or verification channel
     if (message.guild != null && message.channel.id != channels.verify) return;
@@ -22,14 +24,17 @@ async function execute(client, message, args) {
                 "It should be in this format: `!verify xxxxxx`";
     }
 
+    // Member is already verified
+    else if (member.roles.has(roles.verified)) {
+        botReply = "You have already been verified. If you can't talk in the server, please message an exec.";
+    }
+
     // Verification successful
     else if (args == getPad(message.author.tag.toLowerCase() + seed, 6)) {
         botReply = "Congratulations, you have been successfully verified. " +
                 `**Welcome to ${server.name}!** You may now chat in the server.`;
         
         // Add verified role to member
-        const guild = await client.guilds.get(server.id);
-        const member = await guild.members.get(message.author.id);
         await member.addRole(roles.verified).catch(console.error);
     }
 
