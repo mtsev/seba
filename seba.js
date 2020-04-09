@@ -1,7 +1,16 @@
+const fs = require('fs');
 const Discord = require('discord.js');
+const { prefix, token, server, channels } = require('./config.json');
+
 const client = new Discord.Client();
-const { prefix, token, server, channels, roles, seed } = require('./config.json');
-const { getPad } = require('./random.js');
+client.commands = new Discord.Collection();
+
+// Read all command files in commands directory
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.name, command);
+}
 
 // Output to console on successful login
 client.on('ready', () => {
@@ -17,50 +26,26 @@ client.on('guildMemberAdd', async member => {
 });
 
 
-// Bot command for verification
+// Bot commands
 client.on('message', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
 
-    if (command === 'verify') {
+    if (!client.commands.has(commandName)) return;
 
-        var botReply;
+    const command = client.commands.get(commandName);
 
-        // Ignore messages outside of DM or verification channel
-        if (message.guild != null && message.channel.id != channels.verify) return;
-
-        // Invalid code entered
-        if (args.length == 0 || !args[0].match(/[\d]{6}/)) {
-            botReply = "Please enter a valid verification code. " +
-                    "It should be in this format: `!verify xxxxxx`";
-        }
-
-        // Verification successful
-        else if (args == getPad(message.author.tag.toLowerCase() + seed, 6)) {
-            botReply = "Congratulations, you have been successfully verified. " +
-                    `**Welcome to ${server.name}!** You may now chat in the server.`;
-            
-            // Add verified role to member
-            const guild = client.guilds.get(server.id);
-            const role = guild.roles.get(roles.verified);
-            const member = guild.members.get(message.author.id);
-            await member.addRole(role).catch(console.error);
-        }
-
-        // Incorrect code entered
-        else {
-            botReply = "**Sorry, your verification code was incorrect. Please try the following:**\n" +
-                    "1. Check that the code was entered correctly and try again.\n" +
-                    "2. Check that your Discord tag is the same as what you entered into the form and try again.\n" +
-                    `3. Ping an @exec in the #verification channel or email us at ${server.email} if it's still not working.`;
-        }
-
-        // Send message to member
-        await message.author.send(botReply).catch(console.error);
+    try {
+        await command.execute(client, message, args);
+    } catch (error) {
+        console.error(error);
+        await message.reply("Sorry, an error has occurred. " +
+            "Please try again or ping an @exec if the problem doesn't go away.");
     }
     
 });
 
+// Log onto Discord
 client.login(token);
