@@ -1,30 +1,115 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const fs = require('fs');
 const CronJob = require('cron').CronJob;
-const id = require('./config.json');
+const Discord = require('discord.js');
+const { prefix, token, server, categories, channels, roles } = require('./config.json');
 
-/* Ready message */
+const client = new Discord.Client();
+client.commands = new Discord.Collection();
+
+/* Read all command files in commands directory */
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.name, command);
+}
+
+/* Initialisation sequence */
+var guild;
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    // Log init to console
+    let d = new Date();
+    console.log(`[${d.toLocaleString()}] Logged in as ${client.user.tag}!`);
+
+    // Get guild
+    guild = client.guilds.get(server.id);
+
+    // Start late night cron jobs
+    showLateNights.start();
+    hideLateNights.start();
 });
 
-/* Welcome message on user join */
-client.on('guildMemberAdd', member => {
-    var message = `Welcome to UNSW lo-fi society, ${member}! Please read the <#${id.rules_ch}> and introduce yourself in <#${id.intro_ch}>.`
-    client.channels.get(id.welcome_ch).send(message);
-});
 
-/* Late night voice channel active 01:00 - 06:00 */
-const show_ln_chan = new CronJob('00 00 01 * * *', function() {
-    client.channels.get(id.ln_cat).overwritePermissions(id.everyone, {
-        'SEND_MESSAGES': true,
+/* Late night channels active 01:00 - 06:00 */
+const showLateNights = new CronJob('00 00 01 * * *', () => {
+    const lateNights = guild.channels.get(categories.lateNights);
+
+    // Move category into position
+    lateNights.setPosition(2)
+                .then(newChannel => console.log(`${lateNights.name}'s new position is ${newChannel.position}`))
+                .catch(console.error);
+
+    // Give access to members
+    lateNights.overwritePermissions(guild.roles.get(roles.verified), {
+        VIEW_CHANNEL: true,
+        SEND_MESSAGES: true,
+        CONNECT: true
     })
+        .then(() => console.log("Late nights hours are now in session"))
+        .catch(console.error);
 });
-const hide_ln_chan = new CronJob('00 00 06 * * *', function() {
-	
+
+const hideLateNights = new CronJob('00 00 06 * * *', () => {
+    const lateNights = guild.channels.get(categories.lateNights);
+    const position = guild.channels.get(categories.exec).position + 1;
+
+    // Move category back down
+    lateNights.setPosition(position)
+                .then(newChannel => console.log(`${lateNights.name}'s new position is ${newChannel.position}`))
+                .catch(console.error);
+
+    // Remove access from members
+	lateNights.overwritePermissions(guild.roles.get(roles.verified), {
+        VIEW_CHANNEL: false,
+        SEND_MESSAGES: false,
+        CONNECT: false
+    })
+        .then(() => console.log("Rise with the moon go to bed with the sun"))
+        .catch(console.error);
 });
 
 
-client.login(id.token);
-show_ln_chan.start();
-hide_ln_chan.start()
+/* Welcome message for new members */
+client.on('guildMemberAdd', async member => {
+    const message = `Welcome to ${server.name}, ${member}! ` +
+            `Please read the <#${channels.rules}> and verify yourself to start chatting.`;
+    await client.channels.get(channels.welcome).send(message);
+});
+
+
+/* Bot commands */
+client.on('message', async message => {
+
+    // Ignore non-commands and messages from bots
+    if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+    // Parse message
+    const args = message.content.slice(prefix.length).split(/ +/);
+    const commandName = args.shift().toLowerCase();
+    const command = client.commands.get(commandName);
+
+    // Ignore invalid command
+    if (!command) return;
+
+    // Check for exec only commmands
+    if (command.privileged) {
+        const member = guild.members.get(message.author.id);
+        if (!member.roles.has(roles.exec)) {
+            let d = new Date();
+            console.log(`[${d.toLocaleString()}] Unauthorised user '${member.user.tag}' tried to use '${commandName}'`);
+            return;
+        }
+    }
+    
+    // Execute command
+    try {
+        await command.execute(guild, message, args);
+    } catch (error) {
+        console.error(error);
+        await message.reply("sorry, an error has occurred. " +
+            "Please try again or ping an @exec if the problem doesn't go away.");
+    }
+    
+});
+
+/* Log onto Discord */
+client.login(token);
