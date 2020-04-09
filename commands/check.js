@@ -1,28 +1,24 @@
-const { server, channels, roles, seed } = require('../config.json');
+const { channels, roles, seed } = require('../config.json');
 const { getPad } = require('../random.js');
 
 // Export command so it can be used
 module.exports = {
 	name: 'check',
-	description: 'Check if user code is correct or generate code if none entered',
+    description: 'Check what the verification code of a given user is',
+    privileged: true,
 	execute: execute,
 };
 
 // Actual command to execute
-async function execute(client, message, args) {
+async function execute(guild, message, args) {
 
     let botReply;
-    const guild = await client.guilds.get(server.id);
-    const member = await guild.members.get(message.author.id);
-
-    // Ignore command if member isn't an exec
-    if (!member.roles.has(roles.exec)) return;
 
     // Ignore messages outside of DM or verification channel
-    if (message.guild != null && message.channel.id != channels.verify) return;
+    if (message.channel.type === 'text' && message.channel.id !== channels.verify) return;
 
     // One argument, return target member's verification code
-    if (args.length == 1) {
+    if (args.length === 1) {
 
         var target;
         const taggedUser = message.mentions.users.first();
@@ -56,7 +52,7 @@ async function execute(client, message, args) {
 
     // Wrong number of arguments
     else {
-        botReply = "`usage: !verify <username>`";
+        botReply = '`usage: !check <username>`';
     }
 
     // Send message to member
