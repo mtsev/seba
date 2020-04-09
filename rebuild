@@ -8,4 +8,5 @@ echo Run new container...
 docker run -d \
 	--name seba \
 	--restart=always \
+	-e TZ=Australia/Sydney \
 	mtsev/seba
