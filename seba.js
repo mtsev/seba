@@ -10,15 +10,15 @@ client.on('ready', () => {
 
 
 // Welcome message for new members
-client.on('guildMemberAdd', member => {
-    var message = `Welcome to ${server.name}, ${member}! ` +
+client.on('guildMemberAdd', async member => {
+    const message = `Welcome to ${server.name}, ${member}! ` +
             `Please read the <#${channels.rules}> and verify yourself to start chatting.`;
-    client.channels.get(channels.welcome).send(message);
+    await client.channels.get(channels.welcome).send(message);
 });
 
 
 // Bot command for verification
-client.on('message', message => {
+client.on('message', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/);
@@ -38,15 +38,15 @@ client.on('message', message => {
         }
 
         // Verification successful
-        else if (args == getPad(message.author.tag, 6)) {
+        else if (args == getPad(message.author.tag.toLowerCase() + seed, 6)) {
             botReply = "Congratulations, you have been successfully verified. " +
                     `**Welcome to ${server.name}!** You may now chat in the server.`;
             
             // Add verified role to member
-            let guild = client.guilds.get(server.id);
-            let role = guild.roles.get(roles.verified);
-            let member = guild.members.get(message.author.id);
-            member.addRole(role).catch(console.error);
+            const guild = client.guilds.get(server.id);
+            const role = guild.roles.get(roles.verified);
+            const member = guild.members.get(message.author.id);
+            await member.addRole(role).catch(console.error);
         }
 
         // Incorrect code entered
@@ -58,7 +58,7 @@ client.on('message', message => {
         }
 
         // Send message to member
-        message.author.send(botReply);
+        await message.author.send(botReply).catch(console.error);
     }
     
 });
