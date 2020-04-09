@@ -4,7 +4,7 @@
   "description": "Bot for UNSW lo-fi society Discord server",
   "main": "seba.js",
   "dependencies": {
-    "discord.js": "^11.5.1",
+    "discord.js": "^11.6.4",
     "cron": "^1.8.2"
   },
   "devDependencies": {},

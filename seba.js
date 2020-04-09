@@ -30,40 +30,42 @@ client.on('ready', () => {
 
 
 /* Late night channels active 01:00 - 06:00 */
-const showLateNights = new CronJob('00 00 01 * * *', () => {
-    const lateNights = guild.channels.get(categories.lateNights);
+const showLateNights = new CronJob('00 00 01 * * *', async () => {
+    const lateNights = await guild.channels.get(categories.lateNights);
+    let d = new Date();
 
     // Move category into position
-    lateNights.setPosition(2)
+    await lateNights.setPosition(2)
                 .then(newChannel => console.log(`${lateNights.name}'s new position is ${newChannel.position}`))
                 .catch(console.error);
 
     // Give access to members
-    lateNights.overwritePermissions(guild.roles.get(roles.verified), {
+    await lateNights.overwritePermissions(guild.roles.get(roles.verified), {
         VIEW_CHANNEL: true,
         SEND_MESSAGES: true,
         CONNECT: true
     })
-        .then(() => console.log("Late nights hours are now in session"))
+        .then(() => console.log(`[${d.toLocaleString()}] Late nights hours are now in session`))
         .catch(console.error);
 });
 
-const hideLateNights = new CronJob('00 00 06 * * *', () => {
-    const lateNights = guild.channels.get(categories.lateNights);
-    const position = guild.channels.get(categories.exec).position + 1;
+const hideLateNights = new CronJob('00 00 06 * * *', async () => {
+    const lateNights = await guild.channels.get(categories.lateNights);
+    const position = await guild.channels.get(categories.exec).position + 1;
+    let d = new Date();
 
     // Move category back down
-    lateNights.setPosition(position)
+    await lateNights.setPosition(position)
                 .then(newChannel => console.log(`${lateNights.name}'s new position is ${newChannel.position}`))
                 .catch(console.error);
 
     // Remove access from members
-	lateNights.overwritePermissions(guild.roles.get(roles.verified), {
+	await lateNights.overwritePermissions(guild.roles.get(roles.verified), {
         VIEW_CHANNEL: false,
         SEND_MESSAGES: false,
         CONNECT: false
     })
-        .then(() => console.log("Rise with the moon go to bed with the sun"))
+        .then(() => console.log(`[${d.toLocaleString()}] Rise with the moon go to bed with the sun`))
         .catch(console.error);
 });
 

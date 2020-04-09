@@ -21,24 +21,16 @@ async function execute(guild, message, args) {
     if (args.length === 1 && args[0] in categories.events) {
         
         // Get category object
-        const category = guild.channels.get(categories.events[args[0]]);
-        const position = guild.channels.get(categories.exec).position + 1;
+        const category = await guild.channels.get(categories.events[args[0]]);
+        const position = await guild.channels.get(categories.exec).position + 1;
 
         // Move category into position
-        category.setPosition(position)
+        await category.setPosition(position)
                 .then(newChannel => console.log(`${category.name}'s new position is ${newChannel.position}`))
                 .catch(console.error);
 
-        // Sync permissions for all channels
-        category.children.forEach(channel => {
-            console.log(`Trying to sync ${channel.name}`);
-            channel.lockPermissions()   
-                .then(() => console.log(`Sync'd permissions for ${channel.name}`))
-                .catch(console.error);
-        });
-
         // Remove verified members permissions
-        category.overwritePermissions(guild.roles.get(roles.verified), {
+        await category.overwritePermissions(guild.roles.get(roles.verified), {
             VIEW_CHANNEL: false,
             SEND_MESSAGES: false,
             CONNECT: false
@@ -47,12 +39,19 @@ async function execute(guild, message, args) {
             .catch(console.error);
 
         // Hide channels from everyone
-        category.overwritePermissions(guild.roles.get(guild.id), {
+        await category.overwritePermissions(guild.roles.get(guild.id), {
             VIEW_CHANNEL: false
         })
             .then(updated => console.log(updated.permissionOverwrites.get(guild.id)))
             .catch(console.error);
 
+        // Sync permissions for all channels
+        category.children.forEach(async channel => {
+            console.log(`Trying to sync ${channel.name}`);
+            await channel.lockPermissions()   
+                .then(() => console.log(`Sync'd permissions for ${channel.name}`))
+                .catch(console.error);
+        });
 
         botReply = `${category.name} has been hidden from members.`;
 

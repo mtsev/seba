@@ -21,23 +21,15 @@ async function execute(guild, message, args) {
     if (args.length === 1 && args[0] in categories.events) {
         
         // Get category object
-        const category = guild.channels.get(categories.events[args[0]]);
+        const category = await guild.channels.get(categories.events[args[0]]);
 
         // Move category into position
-        category.setPosition(2)
+        await category.setPosition(2)
                 .then(newChannel => console.log(`${category.name}'s new position is ${newChannel.position}`))
                 .catch(console.error);
 
-        // Sync permissions for all channels
-        category.children.forEach(channel => {
-            console.log(`Trying to sync ${channel.name}`);
-            channel.lockPermissions()   
-                .then(() => console.log(`Sync'd permissions for ${channel.name}`))
-                .catch(console.error);
-        });
-
         // Allow verified members to access channels
-        category.overwritePermissions(guild.roles.get(roles.verified), {
+        await category.overwritePermissions(guild.roles.get(roles.verified), {
             VIEW_CHANNEL: true,
             SEND_MESSAGES: true,
             CONNECT: true
@@ -46,12 +38,19 @@ async function execute(guild, message, args) {
             .catch(console.error);
 
         // Allow everyone to see channels
-        category.overwritePermissions(guild.roles.get(guild.id), {
+        await category.overwritePermissions(guild.roles.get(guild.id), {
             VIEW_CHANNEL: true
         })
             .then(updated => console.log(updated.permissionOverwrites.get(guild.id)))
             .catch(console.error);
         
+        // Sync permissions for all channels
+        category.children.forEach(async channel => {
+            console.log(`Trying to sync ${channel.name}`);
+            await channel.lockPermissions()   
+                .then(() => console.log(`Sync'd permissions for ${channel.name}`))
+                .catch(console.error);
+        });
 
         botReply = `${category.name} is now visible and accessible for verified members.`;
 
