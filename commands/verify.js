@@ -1,4 +1,4 @@
-const { channels, roles, seed } = require('../config.json');
+const { server, channels, roles, seed } = require('../config.json');
 const { getPad } = require('../random.js');
 
 // Export command so it can be used
@@ -30,12 +30,13 @@ async function execute(guild, message, args) {
     }
 
     // Verification successful
-    else if (args === getPad(message.author.tag.toLowerCase() + seed, 6)) {
-        botReply = "Congratulations, you have been successfully verified. " +
-                `**Welcome to ${server.name}!** You may now chat in the server.`;
+    else if (args[0] === getPad(message.author.tag.toLowerCase() + seed, 6)) {
         
         // Add verified role to member
         await member.addRole(roles.verified).catch(console.error);
+
+        botReply = "Congratulations, you have been successfully verified. " +
+                `**Welcome to ${server.name}!** You may now chat in the server.`;
     }
 
     // Incorrect code entered
