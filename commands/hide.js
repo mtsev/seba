@@ -2,59 +2,55 @@ const { categories, roles } = require('../config.json');
 
 // Export command so it can be used
 module.exports = {
-	name: 'hide',
+    name: 'hide',
     description: 'Hide Discord event category from verified members',
     privileged: true,
-	execute: execute,
+    execute: execute,
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
 
     let botReply;
-    let d = new Date();
 
     // Ignore messages outside of exec category
-    if (message.channel.type !== 'text' || message.channel.parentID != categories.exec) return;
+    if (message.channel.type !== 'text' || message.channel.parentID !== categories.exec) return;
 
-    // Invalid arguments
+    // Check correct arguments are given
     if (args.length === 1 && args[0] in categories.events) {
         
         // Get category object
-        const category = await guild.channels.get(categories.events[args[0]]);
-        const position = await guild.channels.get(categories.exec).position + 1;
+        const category = guild.channels.get(categories.events[args[0]]);
+        const position = guild.channels.get(categories.exec).position + 1;
 
-        // Move category into position
-        await category.setPosition(position)
-                .then(newChannel => console.log(`${category.name}'s new position is ${newChannel.position}`))
-                .catch(console.error);
+        try {
 
-        // Remove verified members permissions
-        await category.overwritePermissions(guild.roles.get(roles.verified), {
-            VIEW_CHANNEL: false,
-            SEND_MESSAGES: false,
-            CONNECT: false
-        })
-            .then(updated => console.log(updated.permissionOverwrites.get(roles.verified)))
-            .catch(console.error);
+            // Remove verified members permissions
+            await category.overwritePermissions(guild.roles.get(roles.verified), {
+                VIEW_CHANNEL: false,
+                SEND_MESSAGES: false,
+                CONNECT: false
+            });
 
-        // Hide channels from everyone
-        await category.overwritePermissions(guild.roles.get(guild.id), {
-            VIEW_CHANNEL: false
-        })
-            .then(updated => console.log(updated.permissionOverwrites.get(guild.id)))
-            .catch(console.error);
+            // Hide channels from everyone
+            await category.overwritePermissions(guild.roles.get(guild.id), {
+                VIEW_CHANNEL: false
+            });
 
-        // Sync permissions for all channels
-        category.children.forEach(async channel => {
-            console.log(`Trying to sync ${channel.name}`);
-            await channel.lockPermissions()   
-                .then(() => console.log(`Sync'd permissions for ${channel.name}`))
-                .catch(console.error);
-        });
+            // Sync permissions for all channels
+            category.children.forEach(async channel => {
+                await channel.lockPermissions();
+            });
+
+            // Move category into position
+            await category.setPosition(position);
+
+        } catch (error) {
+            let d = new Date();
+            console.error(`[${d.toLocaleString()}] Couldn't hide '${args[0]}':`, error);
+        }
 
         botReply = `${category.name} has been hidden from members.`;
-
     }
 
     // Invalid arguments
@@ -63,5 +59,4 @@ async function execute(guild, message, args) {
     }
 
     await message.reply(botReply).catch(console.error);
-
 }
