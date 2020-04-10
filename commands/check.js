@@ -3,10 +3,10 @@ const { getPad } = require('../random.js');
 
 // Export command so it can be used
 module.exports = {
-	name: 'check',
+    name: 'check',
     description: 'Check what the verification code of a given user is',
     privileged: true,
-	execute: execute,
+    execute: execute,
 };
 
 // Actual command to execute
@@ -21,11 +21,12 @@ async function execute(guild, message, args) {
     if (args.length === 1) {
 
         var target;
+        const code = getPad(message.author.tag.toLowerCase() + seed, 6);
         const taggedUser = message.mentions.users.first();
         
         // Parse argument to get target member
         if (taggedUser) {
-            target = guild.members.get(taggedUser.id);
+            target = guild.member(taggedUser);
         } else if (args[0].includes('#')) {
             target = guild.members.find(member => member.user.tag === args[0]);
         } else {
@@ -39,13 +40,11 @@ async function execute(guild, message, args) {
 
         // Check if user has already been verified
         else if (target.roles.has(roles.verified)) {
-            const code = getPad(target.user.tag.toLowerCase() + seed, 6);
             botReply = `\`${target.user.tag}\` is already verified with code \`${code}\``;
         }
 
-        // Generate verification code
+        // Output verification code
         else {
-            const code = getPad(target.user.tag.toLowerCase() + seed, 6);
             botReply = `\`${target.user.tag}\` has verification code \`${code}\``;
         }
     }

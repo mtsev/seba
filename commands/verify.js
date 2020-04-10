@@ -3,20 +3,26 @@ const { getPad } = require('../random.js');
 
 // Export command so it can be used
 module.exports = {
-	name: 'verify',
+    name: 'verify',
     description: 'Checks if a given verification code is correct and updates user role',
     privileged: false,
-	execute: execute,
+    execute: execute,
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
 
-    let botReply;
-    const member = await guild.members.get(message.author.id);
-
     // Ignore messages outside of DM or verification channel
     if (message.channel.type === 'text' && message.channel.id !== channels.verify) return;
+
+    let botReply;
+    const member = guild.member(message.author);
+
+    // If the member isn't in the server, this should never happen
+    if (!member) {
+        console.error(`'verify' called by ${message.author.tag} who isn't in the server`);
+        return;
+    }
 
     // Invalid code entered
     if (args.length === 0 || !args[0].match(/[\d]{6}/)) {
