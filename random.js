@@ -9,7 +9,7 @@ module.exports = {
         var rand = mulberry32(seed());
         
         // Generate 6-digit random number
-        return parseInt(rand() * 10**n);
+        return rand().toString().slice(2, n+2);
     }
 };
 

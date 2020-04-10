@@ -30,7 +30,7 @@ async function execute(guild, message, args) {
     }
 
     // Verification successful
-    else if (args === getPad(message.author.tag.toLowerCase() + seed, 6)) {
+    else if (args[0] === getPad(message.author.tag.toLowerCase() + seed, 6)) {
         
         // Add verified role to member
         await member.addRole(roles.verified).catch(console.error);
