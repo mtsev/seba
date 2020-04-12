@@ -12,7 +12,7 @@ function showLateNights(guild) {
     // Make cron job to set up channels and return job for main to run
     return new CronJob('00 00 00 * * *', async () => {
 
-        const lateNights = guild.channels.get(categories.lateNights);
+        const lateNights = guild.channels.get(categories.moveable.latenights);
 
         try {
             // Move category into position
@@ -43,7 +43,7 @@ function hideLateNights(guild) {
     // Make new cron job to pack down channels and return job for main to run
     return new CronJob('00 00 06 * * *', async () => {
 
-        const lateNights = guild.channels.get(categories.lateNights);
+        const lateNights = guild.channels.get(categories.moveable.latenights);
         const position = guild.channels.get(categories.exec).position + 1;
 
         try {

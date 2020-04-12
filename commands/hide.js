@@ -17,10 +17,10 @@ async function execute(guild, message, args) {
     if (message.channel.type !== 'text' || message.channel.parentID !== categories.exec) return;
 
     // Check correct arguments are given
-    if (args.length === 1 && args[0] in categories.events) {
+    if (args.length === 1 && args[0] in categories.moveable) {
         
         // Get category object
-        const category = guild.channels.get(categories.events[args[0]]);
+        const category = guild.channels.get(categories.moveable[args[0]]);
         const position = guild.channels.get(categories.exec).position + 1;
 
         try {
@@ -55,7 +55,7 @@ async function execute(guild, message, args) {
 
     // Invalid arguments
     else {
-        botReply = `\`usage: !hide {${Object.keys(categories.events).join('|')}}\``;
+        botReply = `\`usage: !hide (${Object.keys(categories.moveable).join('|')})\``;
     }
 
     await message.reply(botReply).catch(console.error);

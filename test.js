@@ -1,26 +1,29 @@
 const Discord = require('discord.js');
 const { showLateNights, hideLateNights } = require('./latenights.js');
-const { prefix, token, server, channels, roles } = require('./config.json');
+const { prefix, token, server, roles } = require('./config.json');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
-
-/* ============= TEST COMMANDS ============= */
-const commandFiles = [
-    "move",
-    "archive"
-];
-/* ========================================= */
-
 console.log(`[${new Date().toLocaleString()}] !!! Test mode activated !!!`);
 
+/* Commands to be tested are passed in as arguments */
+const commandFiles = process.argv.slice(2);
 
 /* Import all commands to be tested */
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
-    console.log(`[${new Date().toLocaleString()}] Loaded command '${command.name}'`);
+    try {
+        const command = require(`./commands/${file}`);
+        client.commands.set(command.name, command);
+        console.log(`[${new Date().toLocaleString()}] Loaded command '${command.name}'`);
+    } catch(error) {
+        console.error(`[${new Date().toLocaleString()}] Error loading '${file}':`, error);
+    }
+}
+
+/* Warn if no commands were loaded */
+if (!client.commands.size) {
+    console.log(`[${new Date().toLocaleString()}] Warning: no commands were loaded.`);
 }
 
 /* Initialisation sequence */
