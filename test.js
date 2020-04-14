@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { showLateNights, hideLateNights } = require('./latenights.js');
+// const { showLateNights, hideLateNights } = require('./latenights.js');
 const { prefix, token, server, roles } = require('./config.json');
 
 const client = new Discord.Client();
@@ -35,9 +35,9 @@ client.on('ready', () => {
     // Get guild
     guild = client.guilds.get(server.id);
 
-    // Start late night cron jobs
-    showLateNights(guild).start();
-    hideLateNights(guild).start();
+    // // Start late night cron jobs
+    // showLateNights(guild).start();
+    // hideLateNights(guild).start();
 });
 
 /* Bot commands */

@@ -7,11 +7,11 @@ These are all the commands available to be used. Privileged commands can only be
 ### check
 
 ## categories
-## show
+### show
 
-## hide
+### hide
 
-## archive
+### archive
 
 ## user management
 ## move
