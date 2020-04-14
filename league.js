@@ -52,9 +52,18 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     // case: member starts playing league
     if (!oldLeague && newLeague) {
 
-        // if the lounge name isn't already set, then set it
+        // check if lounge is already set to league mode
         if (lounge.name !== legend) {
+
+            // Set name to league
             await lounge.setName(legend).catch(console.error);
+
+            // Open access to everyone
+            await lounge.overwritePermissions(guild.roles.get(guild.id), {
+                CONNECT: true,
+                SPEAK: true
+            }).catch(console.error);
+
             console.log(`[${new Date().toLocaleString()}] we league now`);
         } 
     }
@@ -77,9 +86,10 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
             if (stillPlaying) return;
         });
 
-        // if no one is playing league anymore, revert name to regular lounge
+        // if no one is playing league anymore, revert to regular lounge
         if (!stillPlaying) {
             await lounge.setName(regular).catch(console.error);
+            await lounge.lockPermissions().catch(console.error);
             console.log(`[${new Date().toLocaleString()}] back to regular lounge`);
         }
     }
@@ -98,10 +108,19 @@ client.on('voiceStateUpdate', async (oldMember, newMember) => {
         // if the lounge is already league, we can ignore
         if (lounge.name === legend) return;
 
-        // otherwise set the lounge name if member is playing
+        // otherwise set to league mode if member is playing
         newMember.presence.activities.forEach(async game => {
             if (game.name === league) {
+                
+                // Set name to league
                 await lounge.setName(legend).catch(console.error);
+
+                // Open access to everyone
+                await lounge.overwritePermissions(guild.roles.get(guild.id), {
+                    CONNECT: true,
+                    SPEAK: true
+                }).catch(console.error);
+                
                 console.log(`[${new Date().toLocaleString()}] we league now`);
             }
         });
@@ -109,7 +128,6 @@ client.on('voiceStateUpdate', async (oldMember, newMember) => {
 
     // case: member leaves the lounge
     else if (oldLounge && !newLounge) {
-        console.log(oldMember.user.tag,'left :(');
 
         // if the lounge isn't league, we can ignore
         if (lounge.name !== legend) return;
@@ -128,9 +146,10 @@ client.on('voiceStateUpdate', async (oldMember, newMember) => {
             if (stillPlaying) return;
         });
 
-        // if no one is playing league anymore, revert name to regular lounge
+        // if no one is playing league anymore, revert to regular lounge
         if (!stillPlaying) {
             await lounge.setName(regular).catch(console.error);
+            await lounge.lockPermissions().catch(console.error);
             console.log(`[${new Date().toLocaleString()}] back to regular lounge`);
         }
     }
