@@ -47,10 +47,14 @@ async function execute(guild, message, args) {
 
     // Incorrect code entered
     else {
+        
+        // Get name of verification channel
+        const verification = guild.channels.get(channels.verify).name;
+        
         botReply = "**Sorry, your verification code was incorrect. Please try the following:**\n" +
                 "1. Check that the code was entered correctly and try again.\n" +
                 "2. Check that your Discord tag is the same as what you entered into the form and try again.\n" +
-                `3. Ping an @exec in the #verification channel or email us at ${server.email} if it's still not working.`;
+                `3. Ping an @exec in the #${verification} channel or email us at ${server.email} if it's still not working.`;
     }
 
     // Send message to member
