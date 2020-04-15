@@ -1,5 +1,5 @@
 const { channels, roles, seed } = require('../config.json');
-const { getPad } = require('../random.js');
+const { getPad } = require('../modules/random.js');
 
 // Export command so it can be used
 module.exports = {

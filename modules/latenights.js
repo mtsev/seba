@@ -1,5 +1,5 @@
 const CronJob = require('cron').CronJob;
-const { categories, roles } = require('./config.json');
+const { categories, roles } = require('../config.json');
 
 module.exports = {
     showLateNights: showLateNights,

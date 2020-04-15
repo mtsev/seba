@@ -1,11 +1,25 @@
+const fs = require('fs');
 const Discord = require('discord.js');
-// const { showLateNights, hideLateNights } = require('./latenights.js');
-const { prefix, token, server, roles } = require('./config.json');
+const { token } = require('./config.json');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
 console.log(`[${new Date().toLocaleString()}] !!! Test mode activated !!!`);
+
+
+/* Load all events */
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+for (const file of eventFiles) {
+    try {
+        const event = require(`./events/${file}`);
+        let eventName = file.split(".")[0];
+        client.on(eventName, event.bind());
+        console.log(`[${new Date().toLocaleString()}] Loaded event '${eventName}'`);
+    } catch(error) {
+        console.error(`[${new Date().toLocaleString()}] Error loading event '${file}':`, error);
+    }
+}
 
 /* Commands to be tested are passed in as arguments */
 const commandFiles = process.argv.slice(2);
@@ -17,7 +31,7 @@ for (const file of commandFiles) {
         client.commands.set(command.name, command);
         console.log(`[${new Date().toLocaleString()}] Loaded command '${command.name}'`);
     } catch(error) {
-        console.error(`[${new Date().toLocaleString()}] Error loading '${file}':`, error);
+        console.error(`[${new Date().toLocaleString()}] Error loading command '${file}':`, error);
     }
 }
 
@@ -27,52 +41,8 @@ if (!client.commands.size) {
 }
 
 /* Initialisation sequence */
-var guild;
 client.on('ready', () => {
-    // Log init to console
     console.log(`[${new Date().toLocaleString()}] Logged in as ${client.user.tag}`);
-
-    // Get guild
-    guild = client.guilds.get(server.id);
-
-    // // Start late night cron jobs
-    // showLateNights(guild).start();
-    // hideLateNights(guild).start();
-});
-
-/* Bot commands */
-client.on('message', async message => {
-
-    // Ignore non-commands and messages from bots
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-    // Parse message
-    const args = message.content.slice(prefix.length).split(/ +/);
-    const commandName = args.shift().toLowerCase();
-    const command = client.commands.get(commandName);
-
-    // Ignore invalid command
-    if (!command) return;
-
-    // Check for exec only commmands
-    if (command.privileged) {
-        const member = guild.member(message.author);
-        if (!member.roles.has(roles.exec)) {
-            console.log(`[${new Date().toLocaleString()}] Unauthorised user '${member.user.tag}' tried to use '${commandName}'`);
-            return;
-        }
-    }
-    
-    // Execute command
-    try {
-        console.log(`[${new Date().toLocaleString()}] Testing command '${commandName}'...`);
-        await command.execute(guild, message, args);
-        console.log(`[${new Date().toLocaleString()}] Success!`);
-    } catch (error) {
-        console.error(`[${new Date().toLocaleString()}]`, error);
-        await message.reply("Sorry, an error has occurred. " +
-            "Please try again or ping an @exec if the problem doesn't go away.");
-    }
 });
 
 /* Log onto Discord */
