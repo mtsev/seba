@@ -9,14 +9,15 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node seba.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mtsev/seba.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mandy Tao",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/mtsev/seba/issues"
