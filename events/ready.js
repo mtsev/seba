@@ -1,5 +1,4 @@
 const { server } = require('../config.json');
-const { showLateNights, hideLateNights } = require('../modules/latenights.js');
 
 // Export event so it can be used
 module.exports = (client) => {
@@ -10,7 +9,13 @@ module.exports = (client) => {
     // Get guild
     guild = client.guilds.get(server.id);
 
-    // Start late night cron jobs
-    showLateNights(guild).start();
-    hideLateNights(guild).start();
+    // Bonus features
+    if (client.bonus) {
+
+        // Late nights
+        const { showLateNights, hideLateNights } = require('../modules/latenights.js');
+        showLateNights(guild).start();
+        hideLateNights(guild).start();
+    }
+    
 }
