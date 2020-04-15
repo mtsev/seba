@@ -1,19 +1,28 @@
-const { server, channels } = require('../config.json');
-const { inGame, setLeague, setRegular } = require('../modules/league.js')
+const { server } = require('../config.json');
 
 // Export event so it can be used
 module.exports = async (client, oldMember, newMember) => {
-    await leagueMode(oldMember, newMember);
+
+    // Bonus features
+    if (client.bonus) {
+
+        // League mode
+        const { lounge } = require('../bonusConfig.json');
+        await leagueMode(lounge, oldMember, newMember);
+    }
 }
 
 // Toggle league mode for lounge
-async function leagueMode(oldMember, newMember) {
+async function leagueMode(loungeID, oldMember, newMember) {
+
+    // Load from league module
+    const { inGame, setLeague, setRegular } = require('../modules/league.js')
 
     // Get guild
     const guild = oldMember.client.guilds.get(server.id);
 
     // Get the lounge channel
-    const lounge = guild.channels.get(channels.lounge);
+    const lounge = guild.channels.get(loungeID);
 
     // Check that the member is in lounge
     if (!lounge.members.find(member => member.id === newMember.id)) return;

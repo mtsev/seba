@@ -10,15 +10,14 @@
         "exec": "",
         "archive": "",
         "moveable": {
-            "events": "",
-            "latenights": ""
+            "events1": "",
+            "events2": ""
         }
     },
     "channels": {
         "welcome": "",
         "rules": "",
-        "verify": "",
-        "lounge": ""
+        "verify": ""
     },
     "roles": {
         "verified": "",
