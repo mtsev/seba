@@ -1,4 +1,4 @@
-const { server } = require('../config.json');
+const { server, channels } = require('../config.json');
 
 // Export event so it can be used
 module.exports = async (client, member) => {
