@@ -6,10 +6,19 @@
         "name": "",
         "email": ""
     },
+    "categories": {
+        "exec": "",
+        "archive": "",
+        "moveable": {
+            "events": "",
+            "latenights": ""
+        }
+    },
     "channels": {
         "welcome": "",
         "rules": "",
-        "verify": ""
+        "verify": "",
+        "lounge": ""
     },
     "roles": {
         "verified": "",

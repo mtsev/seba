@@ -1,7 +1,6 @@
 const { server } = require('../config.json');
 const { showLateNights, hideLateNights } = require('../modules/latenights.js');
 
-
 // Export event so it can be used
 module.exports = (client) => {
 
@@ -15,4 +14,3 @@ module.exports = (client) => {
     showLateNights(guild).start();
     hideLateNights(guild).start();
 }
-
