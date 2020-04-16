@@ -1,4 +1,4 @@
-const { channels, roles, seed } = require('../config.json');
+const { categories, channels, roles, seed } = require('../config.json');
 const { getPad } = require('../modules/random.js');
 
 // Export command so it can be used
@@ -13,14 +13,27 @@ module.exports = {
 async function execute(guild, message, args) {
 
     let botReply;
+    let replyChannel;
 
-    // Ignore messages outside of DM or verification channel
-    if (message.channel.type === 'text' && message.channel.id !== channels.verify) return;
+    // Message in DM or verification channel, reply via DM
+    if (message.channel.type !== 'text' || message.channel.id === channels.verify) {
+        replyChannel = message.author;
+    }
+
+    // Message in exec channel, reply in exec channel
+    else if (message.channel.parentID === categories.exec) {
+        replyChannel = message.channel;
+    }
+
+    // Ignore all other messages
+    else {
+        return;
+    }
 
     // One argument, return target member's verification code
     if (args.length === 1) {
 
-        var target;
+        let target;
         const code = getPad(message.author.tag.toLowerCase() + seed, 6);
         const taggedUser = message.mentions.users.first();
         
@@ -55,5 +68,5 @@ async function execute(guild, message, args) {
     }
 
     // Send message to member
-    await message.author.send(botReply).catch(console.error);
+    await replyChannel.send(botReply).catch(console.error);
 }

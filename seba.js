@@ -8,7 +8,7 @@ client.commands = new Discord.Collection();
 client.bonus = fs.existsSync('./bonusConfig.json');
 
 /* Output to client if bonus features are enabled */
-if (client.bonus) console.log("Bonus features have been enabled.\n")
+if (client.bonus) console.log("Bonus features have been enabled.\n");
 
 /* Load and bind all events */
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
