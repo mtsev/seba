@@ -17,7 +17,7 @@ async function execute(guild, message, args) {
     if (message.channel.type === 'text' && message.channel.id !== channels.verify) return;
 
     let botReply;
-    const member = guild.member(message.author);
+    const member = guild.member(message);
 
     // If the member isn't in the server, this should never happen
     if (!member) {
@@ -53,12 +53,12 @@ async function execute(guild, message, args) {
         connection.connect();
 
         // Add new verified member to table
-        let query = 'INSERT INTO verified_members (discord_id, submission_id)' +
-                    `VALUES (${member.user.id}, ` +
-                    '(SELECT submission_id FROM submissions WHERE ' +
-                    `LOWER(discord_name)='${member.user.tag.toLowerCase()}'))`;
+        let sqlString = 'INSERT INTO verified_members (discord_id, submission_id)' +
+                    'VALUES ( ?, (SELECT submission_id FROM submissions WHERE ' +
+                    `LOWER(discord_name) = ?))`;
+        let values = [member.user.id, `'${member.user.tag.toLowerCase()}'`];
 
-        connection.query(query, (error, results, fields) => {
+        connection.query(sqlString, values, (error, results, fields) => {
             if (error) { 
                 if (error.code === 'ER_DUP_ENTRY') {
                     console.log(`[${new Date().toLocaleString()}] Existing database entry for ${member.user.tag}`); 

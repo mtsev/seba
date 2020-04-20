@@ -56,12 +56,13 @@ async function execute(guild, message, args) {
     connection.connect();
 
     // Look up member data
-    let query = 'SELECT real_name, email_address, zid, phone_number ' +
+    let sqlString = 'SELECT real_name, email_address, zid, phone_number ' +
                 'FROM submissions INNER JOIN verified_members ' +
                 'ON verified_members.submission_id = submissions.submission_id ' +
-                `WHERE discord_id = ${target.user.id}`;
+                'WHERE discord_id = ?';
+    let values = [target.user.id];
 
-    connection.query(query, async (error, results, fields) => {
+    connection.query(sqlString, values, async (error, results, fields) => {
         
         if (error) throw error;
         console.log(`[${new Date().toLocaleString()}] Looking up ${target.user.tag}:--`); 
@@ -73,8 +74,19 @@ async function execute(guild, message, args) {
             await message.reply(botReply).catch(console.error);
 
         } else {
-            let botReply = `\`\`\`Name:  ${results[0].real_name}\nEmail: ${results[0].email_address}\n` +
-                `zID:   ${results[0].zid}\nPhone: ${results[0].phone_number}\`\`\``;
+            // Formatted string of member information
+            let botReply = '```' + `Name:    ${results[0].real_name}\n` + 
+                        `Discord: ${target.user.tag}\nEmail:   ${results[0].email_address}`;
+
+            // Add zID if it was in the database
+            if (results[0].zid) botReply += `\nzID:     ${results[0].zid}`;
+
+            // Add phone number if it was in the database
+            if (results[0].phone_number) botReply += `\nPhone:   ${results[0].phone_number}`;
+
+            // Close formatting
+            botReply += '```';
+
             await message.channel.send(botReply).catch(console.error);
         }
     });

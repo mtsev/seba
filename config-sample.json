@@ -1,6 +1,7 @@
 {
     "prefix": "!",
     "token": "",
+    "seed": "example",
     "server": {
         "id": "",
         "name": "Example Society",
@@ -28,6 +29,5 @@
         "user": "root",
         "password": "P@ssw0rd!",
         "database": "sample_db"
-    },
-    "seed": "example"
+    }
 }

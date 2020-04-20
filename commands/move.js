@@ -22,7 +22,7 @@ async function execute(guild, message, args) {
     if (args.length === 1) {
 
         // Get to and from channels
-        fromChannel = guild.members.get(message.author.id).voiceChannel;
+        fromChannel = guild.member(message).voiceChannel;
         toChannel = guild.channels.find(channel => channel.name === args[0]);
 
         // Check if channels exist

@@ -24,7 +24,7 @@ async function handleCommands(message) {
 
     // Check for exec only commmands
     if (command.privileged) {
-        const member = guild.member(message.author);
+        const member = guild.member(message);
         if (!member.roles.has(roles.exec)) {
             console.log(`[${new Date().toLocaleString()}] Unauthorised user '${member.user.tag}' tried to use '${commandName}'`);
             return;

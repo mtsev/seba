@@ -37,7 +37,6 @@ async function execute(guild, message, args) {
                 let d = new Date();
                 console.error(`[${d.toLocaleString()}] Couldn't archive '${target}':`, error);
             }
-
         });
 
         botReply = `${category.name} has been archived`;

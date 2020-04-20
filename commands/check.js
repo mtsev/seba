@@ -13,22 +13,9 @@ module.exports = {
 async function execute(guild, message, args) {
 
     let botReply;
-    let replyChannel;
 
-    // Message in DM or verification channel, reply via DM
-    if (message.channel.type !== 'text' || message.channel.id === channels.verify) {
-        replyChannel = message.author;
-    }
-
-    // Message in exec channel, reply in exec channel
-    else if (message.channel.parentID === categories.exec) {
-        replyChannel = message.channel;
-    }
-
-    // Ignore all other messages
-    else {
-        return;
-    }
+    // Ignore messages outside verification channel or exec channels
+    if (message.channel.parentID !== categories.exec && message.channel.id !== channels.verify) return;
 
     // Missing argument(s)
     if (args.length === 0) {
@@ -56,7 +43,7 @@ async function execute(guild, message, args) {
 
     // Check that the target member is actually in the server
     if (!target) {
-        botReply = `Couldn't find \`${arg}\` in the server`;
+        botReply = `couldn't find \`${arg}\` in the server`;
     }
 
     // Check if user has already been verified
@@ -70,5 +57,5 @@ async function execute(guild, message, args) {
     }
 
     // Send message to member
-    await replyChannel.send(botReply).catch(console.error);
+    await message.reply(botReply).catch(console.error);
 }

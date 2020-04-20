@@ -6,11 +6,11 @@ This bot uses a MySQL database backend (seba_schema.sql) to allow access to memb
 Main features:
 * Welcomes new members in dedicated welcome channel when they join the server
 * Command for members to verify using a code emailed by [this google script](https://github.com/mtsev/seba-form-script) and updates their roles
-* Command for execs to look up any verified member's information from the database
+* Commands for execs to get any verified member's information from the database
 * Commands to show, hide, and archive categories to easily manage categories for Discord events
 * Command to move all members from one voice channel to another
 
-Bonus features:
+Bonus features - disabled unless `bonusConfig.json` exists:
 * "Late Nights" category which can only be accessed during a specific time period
 * "Gaming Mode" for the "lounge" voice channel which activates when anyone in lounge is playing a specific game
 
@@ -25,8 +25,8 @@ Alternatively, you can run it manually. This bot requires Node.js to run. Depend
 Copy `config-sample.json` to `config.json` and set the following values:
 
 * `prefix` is the string proceeding a bot command
-
 * `token` is the Discord bot token. Get this from the [Discord Developer Portal](https://discordapp.com/developers/applications/)
+* `seed` is a secret value used to generate the verification code. **Must be the same as the google script seed value**
 
 * `server` has info regarding your server as follows:
     - `id` is the ID of your Discord server
@@ -53,8 +53,6 @@ Copy `config-sample.json` to `config.json` and set the following values:
     - `password` is the password of that MySQL user
     - `database` is the name of the database to use
 
-* `seed` is a secret value used to generate the verification code. **Must be the same as the google script seed value**
-
 To enable bonus features, copy `bonusConfig-sample.json` to `bonusConfig.json` and set the following values:
 
 * `latenights` has info for the Late Nights feature:
@@ -65,5 +63,5 @@ To enable bonus features, copy `bonusConfig-sample.json` to `bonusConfig.json` a
 * `lounge` has info for the Gaming Mode feature:
     - `id` is the ID of the "lounge" voice channel
     - `game` is the name of the game for this feature to activate on
-    - `gameMode` is the name of the channel when Game Mode is active
+    - `gameMode` is the name of the channel when Gaming Mode is active
     - `normalMode` is the name of the channel normally
