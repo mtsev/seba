@@ -6,6 +6,7 @@ docker rm -f seba
 
 echo Run new container...
 docker run -d \
+	--network host \
 	--name seba \
 	--restart=always \
 	-e TZ=Australia/Sydney \
