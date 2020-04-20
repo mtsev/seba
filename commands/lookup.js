@@ -15,12 +15,15 @@ async function execute(guild, message, args) {
     // Ignore messages outside of exec category
     if (message.channel.type !== 'text' || message.channel.parentID !== categories.exec) return;
 
-    // Command only accepts one argument
-    if (args.length !== 1) {
+    // Missing argument(s)
+    if (args.length === 0) {
         let botReply = '`usage: !lookup <username>`';
         await message.reply(botReply).catch(console.error);
         return;
     }
+
+    // Concatenate all arguments into a single string
+    let arg = args.join(' ');
 
     // Parse argument to get target member
     let target;
@@ -28,16 +31,16 @@ async function execute(guild, message, args) {
 
     if (taggedUser) {
         target = guild.member(taggedUser);
-    } else if (args[0].includes('#')) {
-        target = guild.members.find(member => member.user.tag === args[0]);
+    } else if (arg.includes('#')) {
+        target = guild.members.find(member => member.user.tag === arg);
     } else {
-        target = guild.members.find(member => member.user.username === args[0] 
-                                        || member.nickname === args[0]);
+        target = guild.members.find(member => member.user.username === arg 
+                                        || member.nickname === arg);
     }
 
     // Check that the target member is actually in the server
     if (!target) {
-        let botReply = `couldn't find \`${args[0]}\` in the server`;
+        let botReply = `couldn't find \`${arg}\` in the server`;
         await message.reply(botReply).catch(console.error);
         return;
     }
