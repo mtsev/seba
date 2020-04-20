@@ -48,7 +48,7 @@ async function execute(guild, message, args) {
             console.error(`[${d.toLocaleString()}] Couldn't show '${args[0]}':`, error);
         }
 
-        botReply = `${category.name} is now visible and accessible for verified members.`;
+        botReply = `${category.name} is now visible and accessible for verified members`;
     }
 
     // Invalid arguments

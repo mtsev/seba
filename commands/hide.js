@@ -50,7 +50,7 @@ async function execute(guild, message, args) {
             console.error(`[${d.toLocaleString()}] Couldn't hide '${args[0]}':`, error);
         }
 
-        botReply = `${category.name} has been hidden from members.`;
+        botReply = `${category.name} has been hidden from members`;
     }
 
     // Invalid arguments

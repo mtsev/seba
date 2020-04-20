@@ -54,20 +54,31 @@ async function execute(guild, message, args) {
     // If nothing has gone wrong so far, go ahead with the move
     if (!botReply) {
 
-        // Counter to check if everyone got moved
-        let err = fromChannel.members.size;
+        // Check that both channels are actually voice channels
+        if (fromChannel.type !== 'voice') {
+            botReply = `\`${fromChannel.name}\` is not a voice channel, please try again`;
+        } else if (toChannel.type !== 'voice') {
+            botReply = `\`${toChannel.name}\` is not a voice channel, please try again`;
+        }
 
-        // Move everyone
-        fromChannel.members.forEach(async member => {
-            try {
-                await member.setVoiceChannel(toChannel).then(err--);
-            } catch (error) {
-                console.error(`[${new Date().toLocaleString()}]`, error);
-            }
-        });
+        // Good to go!
+        else {
+            // Counter to check if everyone got moved
+            let err = fromChannel.members.size;
 
-        // Set output message
-        botReply = err > 0 ? 'sorry, an error has occurred.' : `moved everyone from ${fromChannel} to ${toChannel}.`;
+            // Move everyone
+            fromChannel.members.forEach(async member => {
+                try {
+                    await member.setVoiceChannel(toChannel).then(err--);
+                } catch (error) {
+                    console.error(`[${new Date().toLocaleString()}]`, error);
+                }
+            });
+
+            // Set output message
+            botReply = err > 0 ? 'sorry, an error has occurred' : 
+                `moved everyone from \`${fromChannel.name}\` to \`${toChannel.name}\``;
+        }
     }
 
     // Send output to user

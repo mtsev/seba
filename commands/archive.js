@@ -40,7 +40,7 @@ async function execute(guild, message, args) {
 
         });
 
-        botReply = `${category.name} has been archived.`;
+        botReply = `${category.name} has been archived`;
     }
 
     // Invalid arguments
