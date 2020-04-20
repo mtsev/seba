@@ -1,3 +1,4 @@
+const mysql = require('mysql');
 const { categories, database } = require('../config.json');
 
 // Export command so it can be used
@@ -42,7 +43,6 @@ async function execute(guild, message, args) {
     }
 
     // Connect to database
-    var mysql      = require('mysql');
     var connection = mysql.createConnection({
         host     : database.host,
         user     : database.user,
@@ -70,7 +70,7 @@ async function execute(guild, message, args) {
             await message.reply(botReply).catch(console.error);
 
         } else {
-            botReply = `\`\`\`Name:  ${results[0].real_name}\nEmail: ${results[0].email_address}\n` +
+            let botReply = `\`\`\`Name:  ${results[0].real_name}\nEmail: ${results[0].email_address}\n` +
                 `zID:   ${results[0].zid}\nPhone: ${results[0].phone_number}\`\`\``;
             await message.channel.send(botReply).catch(console.error);
         }

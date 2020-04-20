@@ -1,4 +1,5 @@
-const { server, channels, roles, seed } = require('../config.json');
+const mysql = require('mysql');
+const { server, channels, roles, seed, database } = require('../config.json');
 const { getPad } = require('../modules/random.js');
 
 // Export command so it can be used
@@ -41,6 +42,40 @@ async function execute(guild, message, args) {
         // Add verified role to member
         await member.addRole(roles.verified).catch(console.error);
 
+        // Connect to database
+        var connection = mysql.createConnection({
+            host     : database.host,
+            user     : database.user,
+            password : database.password,
+            database : database.database
+        });
+
+        connection.connect();
+
+        // Add new verified member to table
+        let query = 'INSERT INTO verified_members (discord_id, submission_id)' +
+                    `VALUES (${member.user.id}, ` +
+                    '(SELECT submission_id FROM submissions WHERE ' +
+                    `LOWER(discord_name)='${member.user.tag.toLowerCase()}'))`;
+
+        connection.query(query, (error, results, fields) => {
+            if (error) { 
+                if (error.code === 'ER_DUP_ENTRY') {
+                    console.log(`[${new Date().toLocaleString()}] Existing database entry for ${member.user.tag}`); 
+                } else {
+                    throw error;
+                }
+            } else {
+                console.log(`[${new Date().toLocaleString()}] Adding new member ${member.user.tag}:--`); 
+                console.log(results);
+            }
+            
+        });
+
+        // Close connection to database
+        connection.end();
+
+        // Output to user
         botReply = "Congratulations, you have been successfully verified. " +
                 `**Welcome to ${server.name}!** You may now chat in the server.`;
     }
