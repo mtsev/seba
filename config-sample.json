@@ -3,8 +3,8 @@
     "token": "",
     "server": {
         "id": "",
-        "name": "",
-        "email": ""
+        "name": "Example Society",
+        "email": "email@example.com"
     },
     "categories": {
         "exec": "",
@@ -23,5 +23,11 @@
         "verified": "",
         "exec": ""
     },
-    "seed": ""
+    "database": {
+        "host": "localhost",
+        "user": "root",
+        "password": "P@ssw0rd!",
+        "database": "sample_db"
+    },
+    "seed": "example"
 }
