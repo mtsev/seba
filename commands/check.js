@@ -43,7 +43,8 @@ async function execute(guild, message, args) {
         } else if (args[0].includes('#')) {
             target = guild.members.find(member => member.user.tag === args[0]);
         } else {
-            target = guild.members.find(member => member.user.username === args[0]);
+            target = guild.members.find(member => member.user.username === args[0]
+                                                || member.nickname === args[0]);
         }
 
         // Check that the target member is actually in the server

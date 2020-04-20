@@ -1,11 +1,12 @@
 {
   "name": "seba",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Bot for UNSW lo-fi society Discord server",
   "main": "seba.js",
   "dependencies": {
     "discord.js": "^11.6.4",
-    "cron": "^1.8.2"
+    "cron": "^1.8.2",
+    "mysql": "^2.18.1"
   },
   "devDependencies": {},
   "scripts": {
