@@ -10,10 +10,13 @@ module.exports = {
 // Show late night channels from 00:00, function returns cronjob
 function showLateNights(guild) {
 
-    // Make cron job to set up channels and return job for main to run
-    return new CronJob('00 00 00 * * *', async () => {
+    let H = latenights.start.split(':')[0];
+    let i = latenights.start.split(':')[1];
 
-        const lateNights = guild.channels.get(latenights);
+    // Make cron job to set up channels and return job for main to run
+    return new CronJob(`00 ${i} ${H} * * *`, async () => {
+
+        const lateNights = guild.channels.get(latenights.id);
 
         try {
             // Move category into position
@@ -41,10 +44,13 @@ function showLateNights(guild) {
 // Hide late night channels after 06:00, function returns cronjob
 function hideLateNights(guild) {
 
-    // Make new cron job to pack down channels and return job for main to run
-    return new CronJob('00 00 06 * * *', async () => {
+    let H = latenights.end.split(':')[0];
+    let i = latenights.end.split(':')[1];
 
-        const lateNights = guild.channels.get(latenights);
+    // Make new cron job to pack down channels and return job for main to run
+    return new CronJob(`00 ${i} ${H} * * *`, async () => {
+
+        const lateNights = guild.channels.get(latenights.id);
         const position = guild.channels.get(categories.exec).position + 1;
 
         try {

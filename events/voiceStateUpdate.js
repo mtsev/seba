@@ -6,17 +6,17 @@ module.exports = async (client, oldMember, newMember) => {
     // Bonus features
     if (client.bonus) {
 
-        // League mode
+        // Gaming mode
         const { lounge } = require('../bonusConfig.json');
-        await leagueMode(lounge, oldMember, newMember);
+        await gamingMode(lounge.id, oldMember, newMember);
     }
 }
 
-// Toggle league mode for lounge
-async function leagueMode(loungeID, oldMember, newMember) {
+// Toggle game mode for lounge
+async function gamingMode(loungeID, oldMember, newMember) {
 
-    // Load league module
-    const { setLeague, setRegular } = require('../modules/league.js')
+    // Load gaming module
+    const { setGameMode, setNormalMode } = require('../modules/gaming.js')
 
     // Get guild
     const guild = oldMember.client.guilds.get(server.id);
@@ -30,11 +30,11 @@ async function leagueMode(loungeID, oldMember, newMember) {
 
     // case: member joins the lounge
     if (!oldLounge && newLounge) {
-        setLeague(lounge, newMember);
+        setGameMode(lounge, newMember);
     }
 
     // case: member leaves the lounge
     else if (oldLounge && !newLounge) {
-        setRegular(lounge);
+        setNormalMode(lounge);
     }
 }
