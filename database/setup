@@ -1,0 +1,62 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+	echo "usage: ./setup <database_name>"
+elif [[ $1 == *-* ]]; then
+	echo "error: database name cannot contain hyphens"
+elif [ ! -f seba-schema.sql ]; then
+	echo "error: cannot find 'seba-schema.sql' in directory"
+else
+
+	# Config values
+	host="localhost"
+	user="seba"
+	password="$(openssl rand -base64 12)"
+	database=$1
+
+	# MySQL statements to set up new database and user
+	read -r -d '' statements <<-EOF
+		CREATE DATABASE $database DEFAULT CHARACTER SET utf8mb4;
+		USE $database; 
+		SOURCE seba-schema.sql;
+		CREATE USER $user@$host IDENTIFIED BY '$password';
+		GRANT SELECT, INSERT ON $database.verified_members TO '$user'@'$host';
+		GRANT SELECT, INSERT ON $database.username_history TO '$user'@'$host';
+		GRANT SELECT ON $database.submissions TO '$user'@'$host';
+		FLUSH PRIVILEGES;
+	EOF
+
+	# Set up database
+	echo "Please enter your MySQL root user password when prompted."
+	mysql -uroot -p -e "${statements}"
+
+	# Check if database setup succeeded
+	if [ $? -ne 0 ]; then
+		exit $?
+	fi
+
+	echo "Created new database '${database}'"
+
+	# Check for existing config file
+	if [ -f dbConfig.json  ]; then
+		mv dbConfig.json dbConfig.json.old
+		echo "Copied existing config file to dbConfig.json.old"
+	fi
+
+	# Make config file
+	cat <<-EOF >dbConfig.json
+		{
+		    "host": "$host",
+		    "user": "$user",
+		    "password": "$password",
+		    "database": "$database"
+		}
+	EOF
+
+	# Delete example config file
+	if [ -f dbConfig.json.example ]; then
+		rm dbConfig.json.example
+	fi
+
+	echo "Database features are now enabled!"
+fi

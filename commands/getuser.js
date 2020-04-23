@@ -1,5 +1,4 @@
 const { categories } = require('../config.json');
-const { lookup } = require('../database/interface.js');
 
 // Export command so it can be used
 module.exports = {
@@ -11,6 +10,9 @@ module.exports = {
 
 // Actual command to execute
 async function execute(guild, message, args) {
+
+    // Optional database command, check if enabled in client
+    if (!message.client.database) return;
 
     // Ignore messages outside of exec category
     if (message.channel.type !== 'text' || message.channel.parentID !== categories.exec) return;
@@ -73,5 +75,6 @@ async function execute(guild, message, args) {
     }
 
     // Lookup target member from database
+    const { lookup } = require('../database/interface.js');
     await lookup(target.user, sendOutput);
 }

@@ -1,6 +1,5 @@
 const { server, channels, roles, seed } = require('../config.json');
 const { getPad } = require('../modules/random.js');
-const { addVerified } = require('../database/interface.js');
 
 // Export command so it can be used
 module.exports = {
@@ -39,9 +38,12 @@ async function execute(guild, message, args) {
     // Verification successful
     else if (args[0] === getPad(message.author.tag.toLowerCase() + seed, 6)) {
 
-        // Add new verified member to database
+        // Optional database feature, check client if enabled
         // TODO -- indicate failure to admins
-        addVerified(member.user);
+        if (message.client.database) {
+            const { addVerified } = require('../database/interface.js');
+            addVerified(member.user);
+        } 
         
         // Add verified role to member
         await member.addRole(roles.verified).catch(console.error);

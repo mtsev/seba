@@ -1,18 +1,17 @@
 # seba
 Verification and server management bot for UNSW lo-fi society's Discord server.
 
-This bot uses a MySQL database backend (seba_schema.sql) to allow access to members' information directly from Discord, even if their Discord username has since changed from when they first verified.
-
 Main features:
 * Welcomes new members in dedicated welcome channel when they join the server
 * Command for members to verify using a code emailed by [this google script](https://github.com/mtsev/seba-form-script) and updates their roles
-* Commands for execs to get any verified member's information from the database
 * Commands to show, hide, and archive categories to easily manage categories for Discord events
 * Command to move all members from one voice channel to another
 
-Bonus features - disabled unless `bonusConfig.json` exists:
+Optional bonus features - disabled unless `bonusConfig.json` exists:
 * "Late Nights" category which can only be accessed during a specific time period
 * "Gaming Mode" for the "lounge" voice channel which activates when anyone in lounge is playing a specific game
+
+Seba can also optionally use a MySQL database to access to members' information directly from Discord, even if their Discord username has since changed from when they first verified. See the `database` directory if you want to enable this.
 
 ## Installation
 Download the source code from the [latest release](https://github.com/mtsev/seba/releases/latest).
@@ -22,7 +21,7 @@ You can run this bot in [Docker](https://docs.docker.com/get-docker/) on a Linux
 Alternatively, you can run it manually. This bot requires Node.js to run. Dependencies can be installed with `npm install`. Then you can start the bot with `npm start`.
 
 ## Configuration
-Copy `config-sample.json` to `config.json` and set the following values:
+Copy `config.json.example` to `config.json` and set the following values:
 
 * `prefix` is the string proceeding a bot command
 * `token` is the Discord bot token. Get this from the [Discord Developer Portal](https://discordapp.com/developers/applications/)
@@ -47,13 +46,7 @@ Copy `config-sample.json` to `config.json` and set the following values:
     - `verified` is the ID of the role to assign to members once they verify
     - `exec` is the ID of the exec or admin role to use privileged bot commands
 
-* `database` has the login information for your MySQL database
-    - `host` is the hostname of the database
-    - `user` is the MySQL user to authenticate as
-    - `password` is the password of that MySQL user
-    - `database` is the name of the database to use
-
-To enable bonus features, copy `bonusConfig-sample.json` to `bonusConfig.json` and set the following values:
+To enable bonus features, copy `bonusConfig.json.example` to `bonusConfig.json` and set the following values:
 
 * `latenights` has info for the Late Nights feature:
     - `id` is the ID of the "Late Nights" category

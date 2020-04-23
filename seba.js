@@ -6,6 +6,7 @@ const client = new Discord.Client();
 
 client.commands = new Discord.Collection();
 client.bonus = fs.existsSync('./bonusConfig.json');
+client.database = fs.existsSync('./database/dbConfig.json');
 
 /* Output to client if bonus features are enabled */
 if (client.bonus) console.log("Bonus features have been enabled.\n");

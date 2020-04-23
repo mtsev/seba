@@ -23,11 +23,5 @@
     "roles": {
         "verified": "",
         "exec": ""
-    },
-    "database": {
-        "host": "localhost",
-        "user": "root",
-        "password": "P@ssw0rd!",
-        "database": "sample_db"
     }
 }
