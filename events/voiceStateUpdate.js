@@ -3,11 +3,11 @@ const { server } = require('../config.json');
 // Export event so it can be used
 module.exports = async (client, oldMember, newMember) => {
 
-    // Bonus features
-    if (client.bonus) {
+    // Extra features
+    if (client.extra) {
 
         // Gaming mode
-        const { lounge } = require('../bonusConfig.json');
+        const { lounge } = require('../extraConfig.json');
         await gamingMode(lounge.id, oldMember, newMember);
     }
 }

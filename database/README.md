@@ -1,8 +1,9 @@
 ## Database features
-Seba can optionally use a MySQL database for extra features. These features are disabled by default unless `dbConfig.json` exists. 
+Seba can optionally use a MySQL database for extra features. These features are disabled by default unless `dbConfig.json` exists.
 
 Supported features include:
 * Command for execs to get any verified member's information from the database
+* Maintain username history for verified members
 
 ## Installation
 Install the `mysql-server` package.
@@ -11,15 +12,17 @@ $ sudo apt update
 $ sudo apt install mysql-server
 ```
 
-It is recommended that you run the included security script. 
+It is recommended that you run the included security script and accept the default options with `y`. 
 ```sh
 $ mysql_secure_installation
 ```
 
-Run the `setup` script to set up the database. You can replace `seba_db` with any name you want for the database.
+In this directory, run the `setup` script to set up the database. You can replace `seba_db` with any name you want for the database.
 ```sh
 $ ./setup seba_db
 ```
+
+Lastly, follow [these instructions](https://github.com/mtsev/seba-form-script#database) to set up database access for the Google script. **If the script's access is not set up, database features will not work properly.** If you can't set up access for the script, delete `dbConfig.json` to disable database features for the bot.
 
 ## Configuration
 If you set up the database with the `setup` script, this will already be configured for you. 

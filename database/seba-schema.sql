@@ -39,6 +39,6 @@ CREATE TABLE username_history (
     name_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     username VARCHAR (20) NOT NULL,
-    discrimminator VARCHAR (4) NOT NULL,
+    discriminator VARCHAR (4) NOT NULL,
     discord_id VARCHAR (20) NOT NULL
 ) DEFAULT CHARSET=utf8mb4;

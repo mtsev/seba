@@ -1,24 +1,31 @@
 # seba
 Verification and server management bot for UNSW lo-fi society's Discord server.
 
+Seba can also optionally use a MySQL database to access to members' information directly from Discord, even if their Discord username has since changed from when they first verified. See instructions in the [database directory](database) if you want to enable this.
+
 Main features:
 * Welcomes new members in dedicated welcome channel when they join the server
 * Command for members to verify using a code emailed by [this google script](https://github.com/mtsev/seba-form-script) and updates their roles
 * Commands to show, hide, and archive categories to easily manage categories for Discord events
 * Command to move all members from one voice channel to another
 
-Optional bonus features - disabled unless `bonusConfig.json` exists:
+Optional extra features - disabled unless `extraConfig.json` exists:
 * "Late Nights" category which can only be accessed during a specific time period
 * "Gaming Mode" for the "lounge" voice channel which activates when anyone in lounge is playing a specific game
-
-Seba can also optionally use a MySQL database to access to members' information directly from Discord, even if their Discord username has since changed from when they first verified. See the `database` directory if you want to enable this.
 
 ## Installation
 Download the source code from the [latest release](https://github.com/mtsev/seba/releases/latest).
 
-You can run this bot in [Docker](https://docs.docker.com/get-docker/) on a Linux server with `./start`.
+You can run this bot in [Docker](https://docs.docker.com/get-docker/) on a Linux server with the `start` script.
+```sh
+$ ./start
+```
 
-Alternatively, you can run it manually. This bot requires Node.js to run. Dependencies can be installed with `npm install`. Then you can start the bot with `npm start`.
+Alternatively, you can manually install dependencies and run it. This bot requires Node.js to run.
+```sh
+$ npm install
+$ npm start
+```
 
 ## Configuration
 Copy `config.json.example` to `config.json` and set the following values:
@@ -46,7 +53,8 @@ Copy `config.json.example` to `config.json` and set the following values:
     - `verified` is the ID of the role to assign to members once they verify
     - `exec` is the ID of the exec or admin role to use privileged bot commands
 
-To enable bonus features, copy `bonusConfig.json.example` to `bonusConfig.json` and set the following values:
+## Extra features
+To enable the extra features, copy `extraConfig.json.example` to `extraConfig.json` and set the following values:
 
 * `latenights` has info for the Late Nights feature:
     - `id` is the ID of the "Late Nights" category

@@ -1,4 +1,4 @@
-const { lounge } = require('../bonusConfig.json');
+const { lounge } = require('../extraConfig.json');
 
 module.exports = {
     inGame: inGame,

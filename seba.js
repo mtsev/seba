@@ -5,11 +5,12 @@ const { token } = require('./config.json');
 const client = new Discord.Client();
 
 client.commands = new Discord.Collection();
-client.bonus = fs.existsSync('./bonusConfig.json');
+client.extra = fs.existsSync('./extraConfig.json');
 client.database = fs.existsSync('./database/dbConfig.json');
 
-/* Output to client if bonus features are enabled */
-if (client.bonus) console.log("Bonus features have been enabled.\n");
+/* Output to console if any extra features are enabled */
+if (client.extra) console.log(`[${new Date().toLocaleString()}] Extra features enabled.`);
+if (client.database) console.log(`[${new Date().toLocaleString()}] Database features enabled.`);
 
 /* Load and bind all events */
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));

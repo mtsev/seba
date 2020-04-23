@@ -3,6 +3,5 @@
 Dockerfile
 LICENSE
 node_modules
-database
 test*
 *.example

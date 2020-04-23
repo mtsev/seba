@@ -9,8 +9,8 @@ module.exports = (client) => {
     // Get guild
     guild = client.guilds.get(server.id);
 
-    // Bonus features
-    if (client.bonus) {
+    // Extra features
+    if (client.extra) {
 
         // Late nights
         const { showLateNights, hideLateNights } = require('../modules/latenights.js');
