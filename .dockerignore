@@ -3,4 +3,5 @@
 Dockerfile
 LICENSE
 node_modules
-*.sql
+database
+test*

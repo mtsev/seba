@@ -1,6 +1,6 @@
-const mysql = require('mysql');
-const { server, channels, roles, seed, database } = require('../config.json');
+const { server, channels, roles, seed } = require('../config.json');
 const { getPad } = require('../modules/random.js');
+const { addVerified } = require('../database/interface.js');
 
 // Export command so it can be used
 module.exports = {
@@ -38,42 +38,13 @@ async function execute(guild, message, args) {
 
     // Verification successful
     else if (args[0] === getPad(message.author.tag.toLowerCase() + seed, 6)) {
+
+        // Add new verified member to database
+        // TODO -- indicate failure to admins
+        addVerified(member.user);
         
         // Add verified role to member
         await member.addRole(roles.verified).catch(console.error);
-
-        // Connect to database
-        var connection = mysql.createConnection({
-            host     : database.host,
-            user     : database.user,
-            password : database.password,
-            database : database.database
-        });
-
-        connection.connect();
-
-        // Add new verified member to table
-        let sqlString = 'INSERT INTO verified_members (discord_id, submission_id)' +
-                    'VALUES ( ?, (SELECT submission_id FROM submissions WHERE ' +
-                    `LOWER(discord_name) = ?))`;
-        let values = [member.user.id, `'${member.user.tag.toLowerCase()}'`];
-
-        connection.query(sqlString, values, (error, results, fields) => {
-            if (error) { 
-                if (error.code === 'ER_DUP_ENTRY') {
-                    console.log(`[${new Date().toLocaleString()}] Existing database entry for ${member.user.tag}`); 
-                } else {
-                    throw error;
-                }
-            } else {
-                console.log(`[${new Date().toLocaleString()}] Adding new member ${member.user.tag}:--`); 
-                console.log(results);
-            }
-            
-        });
-
-        // Close connection to database
-        connection.end();
 
         // Output to user
         botReply = "Congratulations, you have been successfully verified. " +

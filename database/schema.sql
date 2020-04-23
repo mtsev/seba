@@ -22,11 +22,22 @@ CREATE TABLE submissions (
     phone_number VARCHAR (10)
 );
 
--- create table for verified members
+-- create table to for verified members
 CREATE TABLE verified_members (
-    verified_member_id INT AUTO_INCREMENT PRIMARY KEY,
+    member_id INT AUTO_INCREMENT PRIMARY KEY,
     discord_id VARCHAR (20) NOT NULL,
-    submission_id INT,
-    FOREIGN KEY (submission_id) REFERENCES submissions(submission_id),
+    submission INT NOT NULL,
+    FOREIGN KEY (submission) REFERENCES submissions(submission_id),
+    UNIQUE (discord_id),
+    UNIQUE (submission)
+);
+
+-- create table to track username changes
+CREATE TABLE names (
+    name_id INT AUTO_INCREMENT PRIMARY KEY,
+    modified DATETIME,
+    username VARCHAR (20) NOT NULL,
+    discrimminator VARCHAR (4) NOT NULL,
+    discord_id VARCHAR (20) NOT NULL,
     UNIQUE (discord_id)
 );
