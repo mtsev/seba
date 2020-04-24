@@ -39,10 +39,21 @@ async function execute(guild, message, args) {
     else if (args[0] === getPad(message.author.tag.toLowerCase() + seed, 6)) {
 
         // Optional database feature, check client if enabled
-        // TODO -- indicate failure to admins
         if (message.client.database) {
-            const { addVerified } = require('../database/interface.js');
+
+            const { addVerified, addUsername, getNames } = require('../database/interface.js');
+
+            // Add new verified member to database
+            // TODO -- indicate failure to admins
             addVerified(member.user);
+
+            // Start tracking username history
+            var addUser = function (history) {
+                const last = history.sort((a, b) => b.name_id - a.name_id).shift();
+                if (!last || last.username !== user.username || last.discriminator != user.discriminator)
+                    addUsername(user);
+            }
+            getNames(user, addUser);
         } 
         
         // Add verified role to member

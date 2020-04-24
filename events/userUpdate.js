@@ -7,7 +7,7 @@ module.exports = async (client, oldUser, newUser) => {
     if (client.database) {
 
         // Track username change
-        await usernameChange(oldUser, newUser);
+        usernameChange(oldUser, newUser);
     }
 }
 
@@ -26,6 +26,6 @@ async function usernameChange(oldUser, newUser) {
 
     // Add username to database
     const { addUsername } = require('../database/interface.js');
-    await addUsername(newUser);
+    addUsername(newUser);
 
 }
