@@ -30,6 +30,7 @@ If you set up the database with the `setup` script, this will already be configu
 Otherwise, copy `dbConfig.json.example` to `dbConfig.json` and set the following values:
 
 * `host` is the hostname of the database
+* `port` is the port number to connect to
 * `user` is the MySQL user to authenticate as
 * `password` is the password of that MySQL user
 * `database` is the name of the database to use

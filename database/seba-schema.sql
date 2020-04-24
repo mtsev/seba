@@ -22,7 +22,7 @@ CREATE TABLE submissions (
     email_address VARCHAR (50) NOT NULL,
     zid VARCHAR (8),
     phone_number VARCHAR (10)
-) DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- create table to for verified members
 CREATE TABLE verified_members (
@@ -32,7 +32,7 @@ CREATE TABLE verified_members (
     FOREIGN KEY (submission) REFERENCES submissions(submission_id) ON UPDATE CASCADE,
     UNIQUE (discord_id),
     UNIQUE (submission)
-) DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- create table to track username changes
 CREATE TABLE username_history (
@@ -40,5 +40,6 @@ CREATE TABLE username_history (
     modified DATETIME DEFAULT CURRENT_TIMESTAMP,
     username VARCHAR (20) NOT NULL,
     discriminator VARCHAR (4) NOT NULL,
-    discord_id VARCHAR (20) NOT NULL
-) DEFAULT CHARSET=utf8mb4;
+    discord_id VARCHAR (20) NOT NULL,
+    FOREIGN KEY (discord_id) REFERENCES verified_members(discord_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;

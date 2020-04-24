@@ -28,7 +28,6 @@ async function execute(guild, message, args) {
     let arg = args.join(' ');
 
     let target;
-    const code = getPad(message.author.tag.toLowerCase() + seed, 6);
     const taggedUser = message.mentions.users.first();
     
     // Parse argument to get target member
@@ -48,11 +47,13 @@ async function execute(guild, message, args) {
 
     // Check if user has already been verified
     else if (target.roles.has(roles.verified)) {
+        const code = getPad(target.user.tag.toLowerCase() + seed, 6);
         botReply = `\`${target.user.tag}\` is already verified with code \`${code}\``;
     }
 
     // Output verification code
     else {
+        const code = getPad(target.user.tag.toLowerCase() + seed, 6);
         botReply = `\`${target.user.tag}\` has verification code \`${code}\``;
     }
 

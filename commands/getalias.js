@@ -58,7 +58,7 @@ async function execute(guild, message, args) {
         // Send formatted history to channel
         } else {
             // Start reply formatting
-            let botReply = '```' + `${target.user.username} has also been known as:\n`;
+            let botReply = '```' + `Aliases for ${target.user.username}:\n`;
 
             // Add username history to reply
             const unique = [...new Set(history.map(entry => entry.username))];
@@ -73,5 +73,5 @@ async function execute(guild, message, args) {
 
     // Lookup target member from database
     const { getNames } = require('../database/interface.js');
-    await getNames(target.user, sendOutput);
+    getNames(target.user, sendOutput);
 }

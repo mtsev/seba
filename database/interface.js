@@ -1,11 +1,13 @@
 const mysql = require('mysql');
-const { host, user, password, database } = require('./dbConfig.json');
+const { host, port, user, password, database } = require('./dbConfig.json');
 
 var connection = mysql.createConnection({
     host     : host,
+    port     : port,
     user     : user,
     password : password,
-    database : database
+    database : database,
+    charset : 'utf8mb4'
 });
 
 module.exports = {
@@ -19,7 +21,7 @@ module.exports = {
 async function lookup(user, callback) {
     
     // Connect to database
-    connection.connect();
+    // connection.connect();
 
     // Get submission data from table using discord id
     let sqlString = "SELECT real_name, email_address, zid, phone_number " +
@@ -44,14 +46,14 @@ async function lookup(user, callback) {
     });
 
     // Close connection to database
-    connection.end();
+    // connection.end();
 }
 
 /* Add new verified user to database */
 function addVerified(user) {
 
     // Connect to database
-    connection.connect();
+    // connection.connect();
 
     // Use most recent submission matching discord name
     let sqlString = "INSERT INTO verified_members (discord_id, submission) VALUES ( ?, " +
@@ -73,14 +75,14 @@ function addVerified(user) {
     });
 
     // Close connection to database
-    connection.end();
+    // connection.end();
 }
 
 /* Log verified member's username change to database */
 function addUsername(user) {
 
     // Connect to database
-    connection.connect();
+    // connection.connect();
 
     // Add new entry into username history table
     let sqlString = "INSERT INTO username_history (username, discriminator, discord_id) " +
@@ -95,14 +97,14 @@ function addUsername(user) {
     });
 
     // Close connection to database
-    connection.end();
+    // connection.end();
 }
 
 /* Look up username history for member */
-async function getNames(user, callback) {
+function getNames(user, callback) {
 
     // Connect to database
-    connection.connect();
+    // connection.connect();
 
     // Add new entry into username history table
     let sqlString = "SELECT name_id, modified, username, discriminator " + 
@@ -110,7 +112,7 @@ async function getNames(user, callback) {
     let values = [user.id];
 
     // Pass in results to callback
-    connection.query(sqlString, values, (error, results, fields) => {
+    connection.query(sqlString, values, async (error, results, fields) => {
         if (error) throw error;
         console.log(`[${new Date().toLocaleString()}] Getting username history for ${user.tag}:--`); 
         console.log(results);
@@ -118,5 +120,5 @@ async function getNames(user, callback) {
     });
 
     // Close connection to database
-    connection.end();
+    // connection.end();
 }

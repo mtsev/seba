@@ -10,6 +10,7 @@ else
 
 	# Config values
 	host="localhost"
+	port="3306"
 	user="seba"
 	password="$(openssl rand -base64 12)"
 	database=$1
@@ -47,6 +48,7 @@ else
 	cat <<-EOF >dbConfig.json
 		{
 		    "host": "$host",
+		    "port": "$port",
 		    "user": "$user",
 		    "password": "$password",
 		    "database": "$database"
