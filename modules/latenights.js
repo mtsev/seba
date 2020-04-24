@@ -63,7 +63,7 @@ function hideLateNights(guild) {
             });
 
             // Remove access from everyone in case it was manually given with '!show'
-            await category.overwritePermissions(guild.roles.get(guild.id), {
+            await lateNights.overwritePermissions(guild.roles.get(guild.id), {
                 VIEW_CHANNEL: false
             });
 
