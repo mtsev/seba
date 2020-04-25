@@ -1,5 +1,3 @@
-const { categories } = require('../config.json');
-
 // Export command so it can be used
 module.exports = {
     name: 'move',
@@ -15,8 +13,8 @@ async function execute(guild, message, args) {
     let fromChannel;
     let toChannel;
 
-    // Ignore messages outside of exec category
-    if (message.channel.type !== 'text' || message.channel.parentID !== categories.exec) return;
+    // Ignore DMs
+    if (message.channel.type !== 'text') return;
 
     // If only one argument supplied, move from user's current channel
     if (args.length === 1) {
@@ -71,7 +69,7 @@ async function execute(guild, message, args) {
                 try {
                     await member.setVoiceChannel(toChannel).then(err--);
                 } catch (error) {
-                    console.error(`[${new Date().toLocaleString()}]`, error);
+                    console.error(error);
                 }
             });
 

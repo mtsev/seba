@@ -27,10 +27,10 @@ async function execute(guild, message, args) {
     // Concatenate all arguments into a single string
     let arg = args.join(' ');
 
+    // Parse argument to get target member
     let target;
     const taggedUser = message.mentions.users.first();
     
-    // Parse argument to get target member
     if (taggedUser) {
         target = guild.member(taggedUser);
     } else if (arg.includes('#')) {

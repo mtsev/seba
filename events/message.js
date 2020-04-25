@@ -24,7 +24,7 @@ async function handleCommands(message) {
 
     // Log all command uses
     let channel = (message.channel.type === 'text') ? message.channel.name : 'DM';
-    console.log(`[${new Date().toLocaleString()}] <${message.author.tag}> !${commandName} ${args} (${channel})`);
+    console.log(`<${message.author.tag}> !${commandName} ${args} (${channel})`);
 
     // Check for exec only commmands
     if (command.privileged) {
@@ -36,7 +36,7 @@ async function handleCommands(message) {
     try {
         await command.execute(guild, message, args);
     } catch (error) {
-        console.error(`[${new Date().toLocaleString()}]`, error);
+        console.error(error);
         await message.reply("Sorry, an error has occurred. " +
             "Please try again or ping an @exec if the problem doesn't go away.");
     }

@@ -13,8 +13,8 @@ async function execute(guild, message, args) {
 
     let botReply;
 
-    // Ignore messages outside of exec category
-    if (message.channel.type !== 'text' || message.channel.parentID !== categories.exec) return;
+    // Ignore DMs
+    if (message.channel.type !== 'text') return;
 
     // Check correct arguments are given
     if (args.length === 1 && args[0] in categories.moveable) {
@@ -46,8 +46,7 @@ async function execute(guild, message, args) {
             await category.setPosition(position);
 
         } catch (error) {
-            let d = new Date();
-            console.error(`[${d.toLocaleString()}] Couldn't hide '${args[0]}':`, error);
+            console.error(`Couldn't hide '${args[0]}':`, error);
         }
 
         botReply = `${category.name} has been hidden from members`;

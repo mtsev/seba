@@ -36,7 +36,7 @@ async function setGameMode(channel, member) {
         SPEAK: true
     }).catch(console.error);
 
-    console.log(`[${new Date().toLocaleString()}] We're in game mode now`);
+    console.log(`We're in game mode now`);
 }
 
 async function setNormalMode(channel) {
@@ -57,6 +57,6 @@ async function setNormalMode(channel) {
     if (!stillPlaying) {
         await channel.setName(lounge.normalMode).catch(console.error);
         await channel.lockPermissions().catch(console.error);
-        console.log(`[${new Date().toLocaleString()}] Back to regular lounge`);
+        console.log(`Back to regular lounge`);
     }
 }

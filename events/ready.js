@@ -4,7 +4,7 @@ const { server } = require('../config.json');
 module.exports = (client) => {
 
     // Log init to console
-    console.log(`[${new Date().toLocaleString()}] Logged in as ${client.user.tag}!`);
+    console.log(`Logged in as ${client.user.tag}!`);
 
     // Get guild
     guild = client.guilds.get(server.id);
@@ -17,5 +17,4 @@ module.exports = (client) => {
         showLateNights(guild).start();
         hideLateNights(guild).start();
     }
-    
 }

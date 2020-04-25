@@ -22,8 +22,7 @@ async function lookup(user, callback) {
     connection.query(sqlString, values, async (error, results, fields) => {
         
         if (error) throw error;
-        console.log(`[${new Date().toLocaleString()}] Getting info for ${user.tag}: ${results.length} rows returned`); 
-        console.log(results);
+        console.log(`Getting info for ${user.tag}: ${results.length} rows returned`); 
 
         // Pass in first result to callback function, or NULL for no results
         if (results.length === 0) {
@@ -49,13 +48,12 @@ function addVerified(user) {
     connection.query(sqlString, values, (error, results, fields) => {
         if (error) { 
             if (error.code === 'ER_DUP_ENTRY') {
-                console.log(`[${new Date().toLocaleString()}] Existing entry for verified member ${user.tag}`); 
+                console.log(`Existing entry for verified member ${user.tag}`); 
             } else {
                 throw error;
             }
         } else {
-            console.log(`[${new Date().toLocaleString()}] Adding verified member ${user.tag}: ${results.affectedRows} rows affected`); 
-            console.log(results);
+            console.log(`Adding verified member ${user.tag}: ${results.affectedRows} rows affected`); 
         }
     });
 }
@@ -74,7 +72,7 @@ function addUsername(user) {
     // No callback function for user output, only log to console
     connection.query(sqlString, values, (error, results, fields) => {
         if (error) throw error;
-        console.log(`[${new Date().toLocaleString()}] Adding username ${user.tag}: ${results.affectedRows} rows affected`);
+        console.log(`Adding username ${user.tag}: ${results.affectedRows} rows affected`);
     });
 }
 
@@ -92,7 +90,6 @@ function getNames(user, callback) {
     // Pass in results to callback
     connection.query(sqlString, values, async (error, results, fields) => {
         if (error) throw error;
-        console.log(`[${new Date().toLocaleString()}] Getting username history for ${user.tag}: ${results.length} rows returned`);
-        await callback(results);
+        console.log(`Getting username history for ${user.tag}: ${results.length} rows returned`);
     });
 }

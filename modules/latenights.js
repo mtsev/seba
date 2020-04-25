@@ -35,8 +35,7 @@ function showLateNights(guild) {
             });
 
         } catch (error) {
-            let d = new Date();
-            console.error(`[${d.toLocaleString()}] Couldn't show 'late nights':`, error);
+            console.error(`Couldn't show 'late nights':`, error);
         }
     });
 }
@@ -76,8 +75,7 @@ function hideLateNights(guild) {
             await lateNights.setPosition(position);
 
         } catch (error) {
-            let d = new Date();
-            console.error(`[${d.toLocaleString()}] Couldn't hide 'late nights':`, error);
+            console.error(`Couldn't hide 'late nights':`, error);
         }
     });
 }

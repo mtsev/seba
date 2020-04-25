@@ -3,12 +3,16 @@ const mysql = require('mysql');
 const Discord = require('discord.js');
 const { token } = require('./config.json');
 
+/* Format console.log */
+require('./modules/logging.js');
+
+/* Initialise client */
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
 /* Extra features enabled */
 if (fs.existsSync('./database/dbConfig.json')) {
-    console.log(`[${new Date().toLocaleString()}] Extra features enabled.`);
+    console.log('Extra features enabled.');
     client.extra = true;
 }
 
@@ -23,7 +27,7 @@ if (fs.existsSync('./database/dbConfig.json')) {
         database : db.database,
         charset : 'utf8mb4'
     });
-    console.log(`[${new Date().toLocaleString()}] Database features enabled.`);
+    console.log('Database features enabled.');
 }
 
 /* Load and bind all events */
@@ -48,7 +52,8 @@ client.login(token);
 const sigs = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
 sigs.forEach(sig => {
     process.on(sig, function () {
-        console.log(`[${new Date().toLocaleString()}] ${sig} signal received`);
+        console.log();
+        console.log(`${sig} signal received`);
         shutdown();
     });
 });
@@ -56,16 +61,16 @@ sigs.forEach(sig => {
 /* Handle shutdown */
 var shutdown = function () {
     function logout() {
-        console.log(`[${new Date().toLocaleString()}] Logging out ${client.user.tag}...`);
+        console.log(`Logging out ${client.user.tag}...`);
         client.destroy();
-        console.log(`[${new Date().toLocaleString()}] Goodbye!\n`);
+        console.log('Goodbye!\n');
         process.exit();
     }
 
     // Database enabled
     if (client.database) {
         client.database.end( () => {
-            console.log(`[${new Date().toLocaleString()}] MySQL connection closed`);
+            console.log('MySQL connection closed');
             logout();
         });
     } else {
