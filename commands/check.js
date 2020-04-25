@@ -19,7 +19,7 @@ async function execute(guild, message, args) {
 
     // Missing argument(s)
     if (args.length === 0) {
-        let botReply = '`usage: !lookup <username>`';
+        let botReply = '`usage: !lookup <discord_name>`';
         await message.reply(botReply).catch(console.error);
         return;
     }

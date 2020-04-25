@@ -1,15 +1,3 @@
-const mysql = require('mysql');
-const { host, port, user, password, database } = require('./dbConfig.json');
-
-var connection = mysql.createConnection({
-    host     : host,
-    port     : port,
-    user     : user,
-    password : password,
-    database : database,
-    charset : 'utf8mb4'
-});
-
 module.exports = {
     lookup: lookup,
     addVerified: addVerified,
@@ -19,9 +7,9 @@ module.exports = {
 
 /* Look up member information from database */
 async function lookup(user, callback) {
-    
-    // Connect to database
-    // connection.connect();
+
+    // Get global connection object from client
+    const connection = user.client.database;
 
     // Get submission data from table using discord id
     let sqlString = "SELECT real_name, email_address, zid, phone_number " +
@@ -34,7 +22,7 @@ async function lookup(user, callback) {
     connection.query(sqlString, values, async (error, results, fields) => {
         
         if (error) throw error;
-        console.log(`[${new Date().toLocaleString()}] Looking up ${user.tag}:--`); 
+        console.log(`[${new Date().toLocaleString()}] Getting info for ${user.tag}: ${results.length} rows returned`); 
         console.log(results);
 
         // Pass in first result to callback function, or NULL for no results
@@ -44,16 +32,13 @@ async function lookup(user, callback) {
             await callback(results[0]);
         }
     });
-
-    // Close connection to database
-    // connection.end();
 }
 
 /* Add new verified user to database */
 function addVerified(user) {
 
-    // Connect to database
-    // connection.connect();
+    // Get global connection object from client
+    const connection = user.client.database;
 
     // Use most recent submission matching discord name
     let sqlString = "INSERT INTO verified_members (discord_id, submission) VALUES ( ?, " +
@@ -64,25 +49,22 @@ function addVerified(user) {
     connection.query(sqlString, values, (error, results, fields) => {
         if (error) { 
             if (error.code === 'ER_DUP_ENTRY') {
-                console.log(`[${new Date().toLocaleString()}] Existing database entry for ${user.tag}`); 
+                console.log(`[${new Date().toLocaleString()}] Existing entry for verified member ${user.tag}`); 
             } else {
                 throw error;
             }
         } else {
-            console.log(`[${new Date().toLocaleString()}] Adding new member ${user.tag}:--`); 
+            console.log(`[${new Date().toLocaleString()}] Adding verified member ${user.tag}: ${results.affectedRows} rows affected`); 
             console.log(results);
         }
     });
-
-    // Close connection to database
-    // connection.end();
 }
 
 /* Log verified member's username change to database */
 function addUsername(user) {
 
-    // Connect to database
-    // connection.connect();
+    // Get global connection object from client
+    const connection = user.client.database;
 
     // Add new entry into username history table
     let sqlString = "INSERT INTO username_history (username, discriminator, discord_id) " +
@@ -92,19 +74,15 @@ function addUsername(user) {
     // No callback function for user output, only log to console
     connection.query(sqlString, values, (error, results, fields) => {
         if (error) throw error;
-        console.log(`[${new Date().toLocaleString()}] New username change ${user.tag}:--`); 
-        console.log(results);
+        console.log(`[${new Date().toLocaleString()}] Adding username ${user.tag}: ${results.affectedRows} rows affected`);
     });
-
-    // Close connection to database
-    // connection.end();
 }
 
 /* Look up username history for member */
 function getNames(user, callback) {
 
-    // Connect to database
-    // connection.connect();
+    // Get global connection object from client
+    const connection = user.client.database;
 
     // Add new entry into username history table
     let sqlString = "SELECT name_id, modified, username, discriminator " + 
@@ -114,11 +92,7 @@ function getNames(user, callback) {
     // Pass in results to callback
     connection.query(sqlString, values, async (error, results, fields) => {
         if (error) throw error;
-        console.log(`[${new Date().toLocaleString()}] Getting username history for ${user.tag}:--`); 
-        console.log(results);
+        console.log(`[${new Date().toLocaleString()}] Getting username history for ${user.tag}: ${results.length} rows returned`);
         await callback(results);
     });
-
-    // Close connection to database
-    // connection.end();
 }

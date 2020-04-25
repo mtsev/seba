@@ -22,13 +22,14 @@ async function handleCommands(message) {
     // Ignore invalid command
     if (!command) return;
 
+    // Log all command uses
+    let channel = (message.channel.type === 'text') ? message.channel.name : 'DM';
+    console.log(`[${new Date().toLocaleString()}] <${message.author.tag}> !${commandName} ${args} (${channel})`);
+
     // Check for exec only commmands
     if (command.privileged) {
         const member = guild.member(message);
-        if (!member.roles.has(roles.exec)) {
-            console.log(`[${new Date().toLocaleString()}] Unauthorised user '${member.user.tag}' tried to use '${commandName}'`);
-            return;
-        }
+        if (!member.roles.has(roles.exec)) return;
     }
     
     // Execute command

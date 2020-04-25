@@ -2,7 +2,7 @@ const { categories } = require('../config.json');
 
 // Export command so it can be used
 module.exports = {
-    name: 'getalias',
+    name: 'alias',
     description: "Get all the usernames a member has been known by",
     privileged: true,
     execute: execute,
@@ -19,7 +19,7 @@ async function execute(guild, message, args) {
 
     // Missing argument(s)
     if (args.length === 0) {
-        let botReply = '`usage: !getalias <discord_name>`';
+        let botReply = '`usage: !alias <discord_name>`';
         await message.reply(botReply).catch(console.error);
         return;
     }
@@ -62,7 +62,7 @@ async function execute(guild, message, args) {
 
             // Add username history to reply
             const unique = [...new Set(history.map(entry => entry.username))];
-            botReply += unique.join();
+            botReply += unique.reverse().join('\n');
     
             // Close formatting
             botReply += '```';
