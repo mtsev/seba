@@ -22,8 +22,11 @@ async function execute(guild, message, args) {
     if (/[a-zA-Z]$/.test(message.client.prefix)) prefix += ' ';
     
     if (!args.length) {
-        data.push(`Commands:  \`${commands.map(command => command.name).join('` `')}\``);
-        data.push(`\nUse \`${prefix}help [command name]\` for info on a specific command.`);
+        data.push('```');
+        data.push('Available commands:\n');
+        data.push(`${commands.map(command => command.name).join(', ')}`);
+        data.push(`\nUse \`${prefix}help [command]\` for info on a specific command.`);
+        data.push('```');
     }
 
     else {
@@ -36,6 +39,7 @@ async function execute(guild, message, args) {
 
         data.push('```');
         if (command.usage) data.push(`${prefix}${command.name} ${command.usage}\n`);
+        if (command.privileged) data.push('Exec use only.\n');
         if (command.description) data.push(command.description);
         data.push('```');
     }
