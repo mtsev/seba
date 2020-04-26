@@ -17,8 +17,9 @@ async function execute(guild, message, args) {
         || message.channel.parentID !== categories.exec) ? message.author : message.channel;
 
     const data = [];
-    const prefix = message.client.prefix;
     const { commands } = message.client;
+    let prefix = message.client.prefix;
+    if (/[a-zA-Z]$/.test(message.client.prefix)) prefix += ' ';
     
     if (!args.length) {
         data.push(`Commands:  \`${commands.map(command => command.name).join('` `')}\``);

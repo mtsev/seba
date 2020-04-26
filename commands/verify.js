@@ -1,11 +1,12 @@
-const { server, channels, roles, seed } = require('../config.json');
+const { prefix, server, channels, roles, seed } = require('../config.json');
 const { getPad } = require('../modules/random.js');
 
 // Export command so it can be used
 module.exports = {
     name: 'verify',
     description: 'Check if a given verification code is correct and update user role. ' +
-                 'Can only be used in verification channel or DM.',
+                 'Can only be used in verification channel or DM. ' +
+                 `Can be called with '${prefix}verify' regardless of prefix setting.`,
     usage: '<verification_code>',
     privileged: false,
     execute: execute,

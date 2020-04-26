@@ -1,4 +1,4 @@
-const { server, roles } = require('../config.json');
+const { prefix, server, roles } = require('../config.json');
 
 // Export event so it can be used
 module.exports = async (client, message) => {
@@ -8,26 +8,39 @@ module.exports = async (client, message) => {
 // Command handler
 async function handleCommands(message) {
 
-    // Get prefix for client
-    const prefix = message.client.prefix;
+    // Ignore messages from bots
+    if (message.author.bot) return;
 
-    // Ignore non-commands and messages from bots
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    // Get prefix for client
+    const customPrefix = message.client.prefix;
+
+    // Check whether default or custom prefix is being used
+    let usedPrefix;
+    if (message.content.startsWith(customPrefix)) {
+        usedPrefix = customPrefix;
+    } else if (message.content.startsWith(prefix)) {
+        usedPrefix = prefix;
+    } else {
+        return;
+    }
 
     // Parse message
-    const args = message.content.slice(prefix.length).split(/ +/);
+    const args = message.content.slice(usedPrefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
     const command = message.client.commands.get(commandName);
-
-    // Get guild
-    var guild = message.client.guilds.get(server.id);
 
     // Ignore invalid command
     if (!command) return;
 
+    // Only allow non-privileged commands to use default prefix
+    if (command.privileged && usedPrefix != customPrefix) return;
+
+    // Get guild
+    var guild = message.client.guilds.get(server.id);
+
     // Log all command uses
     let channel = (message.channel.type === 'text') ? message.channel.name : 'DM';
-    console.log(`<${message.author.tag}> !${commandName} ${args} (${channel})`);
+    console.log(`<${message.author.tag}> ${message.content} (${channel})`);
 
     // Check for exec only commmands
     if (command.privileged) {
