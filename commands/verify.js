@@ -4,7 +4,9 @@ const { getPad } = require('../modules/random.js');
 // Export command so it can be used
 module.exports = {
     name: 'verify',
-    description: 'Checks if a given verification code is correct and updates user role',
+    description: 'Check if a given verification code is correct and update user role. ' +
+                 'Can only be used in verification channel or DM.',
+    usage: '<verification_code>',
     privileged: false,
     execute: execute,
 };

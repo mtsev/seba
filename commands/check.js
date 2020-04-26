@@ -4,7 +4,9 @@ const { getPad } = require('../modules/random.js');
 // Export command so it can be used
 module.exports = {
     name: 'check',
-    description: 'Check what the verification code of a given user is',
+    description: 'Check what the verification code of a given member is. ' + 
+                 'Can be used in verification channel and exec channels.',
+    usage: `<discord_name>`,
     privileged: true,
     execute: execute,
 };
@@ -19,7 +21,7 @@ async function execute(guild, message, args) {
 
     // Missing argument(s)
     if (args.length === 0) {
-        let botReply = '`usage: !lookup <discord_name>`';
+        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
         await message.reply(botReply).catch(console.error);
         return;
     }

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const mysql = require('mysql');
 const Discord = require('discord.js');
-const { token } = require('./config.json');
+const { token, prefix } = require('./config.json');
 
 /* Format console.log */
 require('./modules/logging.js');
@@ -9,6 +9,7 @@ require('./modules/logging.js');
 /* Initialise client */
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
+client.prefix = prefix;
 
 /* Extra features enabled */
 if (fs.existsSync('./database/dbConfig.json')) {

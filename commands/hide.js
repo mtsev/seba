@@ -3,7 +3,8 @@ const { categories, roles } = require('../config.json');
 // Export command so it can be used
 module.exports = {
     name: 'hide',
-    description: 'Hide Discord event category from verified members',
+    description: 'Hide category from verified members. Can be used in any channel.',
+    usage: `(${Object.keys(categories.moveable).join('|')})`,
     privileged: true,
     execute: execute,
 };
@@ -54,7 +55,7 @@ async function execute(guild, message, args) {
 
     // Invalid arguments
     else {
-        botReply = `\`usage: !hide (${Object.keys(categories.moveable).join('|')})\``;
+        botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
     }
 
     await message.reply(botReply).catch(console.error);

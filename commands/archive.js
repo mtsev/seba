@@ -3,7 +3,9 @@ const { categories } = require('../config.json');
 // Export command so it can be used
 module.exports = {
     name: 'archive',
-    description: 'Move all channels in target category to archive category. Default target is events.',
+    description: 'Move all channels in target category to archive category. ' +
+                 'Default target is events. Can be used in any channel.',
+    usage: `[(${Object.keys(categories.moveable).join('|')})]`,
     privileged: true,
     execute: execute,
 };
@@ -44,9 +46,8 @@ async function execute(guild, message, args) {
 
     // Invalid arguments
     else {
-        botReply = `\`usage: !archive [(${Object.keys(categories.moveable).join('|')})]\``;
+        botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
     }
 
     await message.reply(botReply).catch(console.error);
-
 }

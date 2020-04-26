@@ -3,7 +3,9 @@ const { categories } = require('../config.json');
 // Export command so it can be used
 module.exports = {
     name: 'getuser',
-    description: "Get Discord member's information from database",
+    description: "Get a member's personal information from database. " +
+                 "Can only be used in exec channels.",
+    usage: `<discord_name>`,
     privileged: true,
     execute: execute,
 };
@@ -19,7 +21,7 @@ async function execute(guild, message, args) {
 
     // Missing argument(s)
     if (args.length === 0) {
-        let botReply = '`usage: !getuser <discord_name>`';
+        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
         await message.reply(botReply).catch(console.error);
         return;
     }

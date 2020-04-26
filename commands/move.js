@@ -1,7 +1,9 @@
 // Export command so it can be used
 module.exports = {
     name: 'move',
-    description: 'Move all members in the user\'s voice channel to another voice channel',
+    description: 'Move all members from one voice channel to another. ' +
+                 'Can be used in any channel.',
+    usage: '[from_channel] <to_channel>',
     privileged: true,
     execute: execute,
 };
@@ -46,7 +48,7 @@ async function execute(guild, message, args) {
 
     // Incorrect arguments supplied
     else {
-        botReply = `\`usage: !move [from_channel] <to_channel>\``;
+        botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
     }
 
     // If nothing has gone wrong so far, go ahead with the move

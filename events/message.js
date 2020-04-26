@@ -1,4 +1,4 @@
-const { prefix, server, roles } = require('../config.json');
+const { server, roles } = require('../config.json');
 
 // Export event so it can be used
 module.exports = async (client, message) => {
@@ -7,6 +7,9 @@ module.exports = async (client, message) => {
 
 // Command handler
 async function handleCommands(message) {
+
+    // Get prefix for client
+    const prefix = message.client.prefix;
 
     // Ignore non-commands and messages from bots
     if (!message.content.startsWith(prefix) || message.author.bot) return;
