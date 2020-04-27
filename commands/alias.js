@@ -5,7 +5,7 @@ module.exports = {
     name: 'alias',
     description: 'Get all the usernames a member has been known by. ' +
                  'Can only be used in exec channels.',
-    usage: "<discord_name>",
+    usage: '<discord_name>',
     privileged: true,
     execute: execute,
 };
@@ -59,17 +59,14 @@ async function execute(guild, message, args) {
     
         // Send formatted history to channel
         } else {
-            // Start reply formatting
-            let botReply = '```' + `Aliases for ${target.user.username}:\n`;
+
+            let botReply = `Aliases for ${target.user.username}:\n`;
 
             // Add username history to reply
             const unique = [...new Set(history.map(entry => entry.username))];
             botReply += unique.reverse().join('\n');
     
-            // Close formatting
-            botReply += '```';
-    
-            await message.channel.send(botReply).catch(console.error);
+            await message.channel.send('```' + botReply + '```').catch(console.error);
         }
     }
 

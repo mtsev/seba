@@ -35,7 +35,7 @@ async function execute(guild, message, args) {
             });
 
             // Allow everyone to see channels
-            await category.overwritePermissions(guild.roles.get(guild.id), {
+            await category.overwritePermissions(guild.defaultRole, {
                 VIEW_CHANNEL: true
             });
             

@@ -6,7 +6,7 @@ module.exports = {
     name: 'check',
     description: 'Check what the verification code of a given member is. ' + 
                  'Can be used in verification channel and exec channels.',
-    usage: `<discord_name>`,
+    usage: '<discord_name>',
     privileged: true,
     execute: execute,
 };

@@ -2,7 +2,7 @@
 module.exports = {
     name: 'prefix',
     description: 'Change the prefix for bot commands. Can be used in any channel.',
-    usage: `<new prefix>`,
+    usage: '<new prefix>',
     privileged: true,
     execute: execute,
 };

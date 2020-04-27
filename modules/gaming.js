@@ -31,12 +31,12 @@ async function setGameMode(channel, member) {
     await channel.setName(lounge.gameMode).catch(console.error);
 
     // Open access to everyone
-    await channel.overwritePermissions(guild.roles.get(guild.id), {
+    await channel.overwritePermissions(guild.defaultRole, {
         CONNECT: true,
         SPEAK: true
     }).catch(console.error);
 
-    console.log(`We're in game mode now`);
+    console.log("We're in game mode now");
 }
 
 async function setNormalMode(channel) {
@@ -46,17 +46,17 @@ async function setNormalMode(channel) {
 
     // check if anyone is still playing game in the lounge
     let stillPlaying = false;
-    for (member in channel.members) {
+    channel.members.forEach(member => {
         if (inGame(member)) {
             stillPlaying = true;
             return;
         }
-    }
+    });
 
     // if no one is playing game anymore, revert to regular lounge
     if (!stillPlaying) {
         await channel.setName(lounge.normalMode).catch(console.error);
         await channel.lockPermissions().catch(console.error);
-        console.log(`Back to regular lounge`);
+        console.log('Back to regular lounge');
     }
 }

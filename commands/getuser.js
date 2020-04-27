@@ -5,7 +5,7 @@ module.exports = {
     name: 'getuser',
     description: "Get a member's personal information from database. " +
                  "Can only be used in exec channels.",
-    usage: `<discord_name>`,
+    usage: '<discord_name>',
     privileged: true,
     execute: execute,
 };

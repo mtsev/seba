@@ -16,23 +16,26 @@ function showLateNights(guild) {
     // Make cron job to set up channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
 
-        const lateNights = guild.channels.get(latenights.id);
+        const category = guild.channels.get(latenights.id);
 
         try {
             // Move category into position
-            await lateNights.setPosition(2);
+            await category.setPosition(2);
 
-            // Give access to members
-            await lateNights.overwritePermissions(guild.roles.get(roles.verified), {
+            // Allow verified members to access channels
+            await category.overwritePermissions(guild.roles.get(roles.verified), {
                 VIEW_CHANNEL: true,
                 SEND_MESSAGES: true,
                 CONNECT: true
             });
-
+            
             // Sync permissions for all channels
-            lateNights.children.forEach(async channel => {
+            category.children.forEach(async channel => {
                 await channel.lockPermissions();
             });
+
+
+            console.log('Late night channels now open');
 
         } catch (error) {
             console.error(`Couldn't show 'late nights':`, error);
@@ -49,30 +52,32 @@ function hideLateNights(guild) {
     // Make new cron job to pack down channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
 
-        const lateNights = guild.channels.get(latenights.id);
+        const category = guild.channels.get(latenights.id);
         const position = guild.channels.get(categories.exec).position + 1;
 
         try {
 
-            // Remove access from members
-            await lateNights.overwritePermissions(guild.roles.get(roles.verified), {
+            // Remove verified members permissions
+            await category.overwritePermissions(guild.roles.get(roles.verified), {
                 VIEW_CHANNEL: false,
                 SEND_MESSAGES: false,
                 CONNECT: false
             });
 
-            // Remove access from everyone in case it was manually given with '!show'
-            await lateNights.overwritePermissions(guild.roles.get(guild.id), {
+            // Hide channels from everyone
+            await category.overwritePermissions(guild.defaultRole, {
                 VIEW_CHANNEL: false
             });
 
             // Sync permissions for all channels
-            lateNights.children.forEach(async channel => {
+            category.children.forEach(async channel => {
                 await channel.lockPermissions();
             });
 
-            // Move category back down
-            await lateNights.setPosition(position);
+            // Move category into position
+            await category.setPosition(position);
+
+            console.log('Goodbye late night channels');
 
         } catch (error) {
             console.error(`Couldn't hide 'late nights':`, error);

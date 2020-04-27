@@ -34,7 +34,7 @@ async function execute(guild, message, args) {
             });
 
             // Hide channels from everyone
-            await category.overwritePermissions(guild.roles.get(guild.id), {
+            await category.overwritePermissions(guild.defaultRole, {
                 VIEW_CHANNEL: false
             });
 
