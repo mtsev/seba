@@ -53,7 +53,6 @@ client.login(token);
 const sigs = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
 sigs.forEach(sig => {
     process.on(sig, function () {
-        console.log();
         console.log(`${sig} signal received`);
         shutdown();
     });

@@ -52,7 +52,7 @@ async function handleCommands(message) {
     try {
         await command.execute(guild, message, args);
     } catch (error) {
-        console.error(error);
+        console.error(command.name + ':', error);
         await message.reply("Sorry, an error has occurred. " +
             "Please try again or ping an @exec if the problem doesn't go away.");
     }

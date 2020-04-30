@@ -31,15 +31,21 @@ async function execute(guild, message, args) {
         const archive = guild.channels.get(categories.archive);
 
         // Move all channels and sync permissions to archive
-        category.children.forEach(async channel => {
+        for (let channel of category.children.values()) {
             try {
                 await channel.setParent(archive);
-                await channel.lockPermissions();
+
+                // Only sync if necessary
+                if (!channel.permissionsLocked) {
+                    console.log('Syncing perms for', channel.name);
+                    await channel.lockPermissions();
+                }
+
             } catch (error) {
-                let d = new Date();
                 console.error(`Couldn't archive '${target}':`, error);
+                throw error;
             }
-        });
+        }
 
         botReply = `${category.name} has been archived`;
     }

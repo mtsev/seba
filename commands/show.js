@@ -34,21 +34,50 @@ async function execute(guild, message, args) {
                 CONNECT: true
             });
 
+            // Log the perms for category for debugging
+            let perms = category.permissionsFor(roles.verified).serialize(true);
+            let permsTable = [];
+            permsTable.push({ 
+                channel: category.name,
+                VIEW_CHANNEL: perms.VIEW_CHANNEL,
+                SEND_MESSAGES: perms.SEND_MESSAGES,
+                CONNECT: perms.CONNECT
+            });
+
             // Allow everyone to see channels
             await category.overwritePermissions(guild.defaultRole, {
                 VIEW_CHANNEL: true
             });
             
             // Sync permissions for all channels
-            category.children.forEach(async channel => {
-                await channel.lockPermissions();
-            });
+            for (let channel of category.children.values()) {
+
+                // Only sync if necessary
+                if (!channel.permissionsLocked) {
+                    console.log('Syncing perms for', channel.name);
+                    await channel.lockPermissions();
+                }
+
+                // Log the perms for each channel for debugging
+                perms = channel.permissionsFor(roles.verified).serialize(true);
+                permsTable.push({ 
+                    channel: channel.name,
+                    VIEW_CHANNEL: perms.VIEW_CHANNEL,
+                    SEND_MESSAGES: perms.SEND_MESSAGES,
+                    CONNECT: perms.CONNECT
+                });
+            }
+            
+            // Log perms table
+            console.table(permsTable);
+
+            // Success message
+            botReply = `${category.name} is now visible and accessible for verified members`;
 
         } catch (error) {
             console.error(`Couldn't show '${args[0]}':`, error);
+            throw error;
         }
-
-        botReply = `${category.name} is now visible and accessible for verified members`;
     }
 
     // Invalid arguments

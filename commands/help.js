@@ -24,7 +24,7 @@ async function execute(guild, message, args) {
     if (!args.length) {
         data.push('Available commands:\n');
         data.push(`${commands.map(command => command.name).join(', ')}`);
-        data.push(`\nUse \`${prefix}help [command]\` for info on a specific command.`);
+        data.push(`\nUse '${prefix}help [command]' for info on a specific command.`);
     }
 
     else {

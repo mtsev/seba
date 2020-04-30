@@ -36,7 +36,7 @@ async function setGameMode(channel, member) {
         SPEAK: true
     }).catch(console.error);
 
-    console.log("We're in game mode now");
+    console.log("Game mode set by", member.user.tag);
 }
 
 async function setNormalMode(channel) {

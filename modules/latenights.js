@@ -28,12 +28,38 @@ function showLateNights(guild) {
                 SEND_MESSAGES: true,
                 CONNECT: true
             });
+
+            // Log the perms for category for debugging
+            let perms = category.permissionsFor(roles.verified).serialize(true);
+            let permsTable = [];
+            permsTable.push({ 
+                channel: category.name,
+                VIEW_CHANNEL: perms.VIEW_CHANNEL,
+                SEND_MESSAGES: perms.SEND_MESSAGES,
+                CONNECT: perms.CONNECT
+            });
             
             // Sync permissions for all channels
-            category.children.forEach(async channel => {
-                await channel.lockPermissions();
-            });
+            for (let channel of category.children.values()) {
 
+                // Only sync if necessary
+                if (!channel.permissionsLocked) {
+                    console.log('Syncing perms for', channel.name);
+                    await channel.lockPermissions();
+                }
+
+                // Log the perms for each channel for debugging
+                perms = channel.permissionsFor(roles.verified).serialize(true);
+                permsTable.push({ 
+                    channel: channel.name,
+                    VIEW_CHANNEL: perms.VIEW_CHANNEL,
+                    SEND_MESSAGES: perms.SEND_MESSAGES,
+                    CONNECT: perms.CONNECT
+                });
+            }
+
+            // Log perms table
+            console.table(permsTable);
 
             console.log('Late night channels now open');
 
@@ -69,10 +95,37 @@ function hideLateNights(guild) {
                 VIEW_CHANNEL: false
             });
 
-            // Sync permissions for all channels
-            category.children.forEach(async channel => {
-                await channel.lockPermissions();
+            // Log the perms for category for debugging
+            let perms = category.permissionsFor(roles.verified).serialize(true);
+            let permsTable = [];
+            permsTable.push({ 
+                channel: category.name,
+                VIEW_CHANNEL: perms.VIEW_CHANNEL,
+                SEND_MESSAGES: perms.SEND_MESSAGES,
+                CONNECT: perms.CONNECT
             });
+            
+            // Sync permissions for all channels
+            for (let channel of category.children.values()) {
+
+                // Only sync if necessary
+                if (!channel.permissionsLocked) {
+                    console.log('Syncing perms for', channel.name);
+                    await channel.lockPermissions();
+                }
+
+                // Log the perms for each channel for debugging
+                perms = channel.permissionsFor(roles.verified).serialize(true);
+                permsTable.push({ 
+                    channel: channel.name,
+                    VIEW_CHANNEL: perms.VIEW_CHANNEL,
+                    SEND_MESSAGES: perms.SEND_MESSAGES,
+                    CONNECT: perms.CONNECT
+                });
+            }
+
+            // Log perms table
+            console.table(permsTable);
 
             // Move category into position
             await category.setPosition(position);
