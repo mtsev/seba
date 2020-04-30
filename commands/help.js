@@ -22,9 +22,11 @@ async function execute(guild, message, args) {
     if (/[a-zA-Z]$/.test(message.client.prefix)) prefix += ' ';
     
     if (!args.length) {
+        data.push('```');
         data.push('Available commands:\n');
         data.push(`${commands.map(command => command.name).join(', ')}`);
         data.push(`\nUse '${prefix}help [command]' for info on a specific command.`);
+        data.push('```');
     }
 
     else {
@@ -35,15 +37,17 @@ async function execute(guild, message, args) {
             return message.reply(`No command called \`${command.name}\` found.`);
         }
 
+        data.push('```');
         if (command.usage) data.push(`${prefix}${command.name} ${command.usage}\n`);
         if (command.privileged) data.push('Exec use only.\n');
         if (command.description) data.push(command.description);
+        data.push('```');
     }
 
 
     // Send help message
     try {
-        await replyChannel.send('```' + data + '```');
+        await replyChannel.send(data);
     } catch(error) {
 
         let errorMessage;

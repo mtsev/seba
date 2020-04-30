@@ -52,7 +52,7 @@ client.login(token);
 /* Graceful shutdown */
 const sigs = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
 sigs.forEach(sig => {
-    process.on(sig, function () {
+    process.on(sig, () => {
         console.log(`${sig} signal received`);
         shutdown();
     });
@@ -60,9 +60,9 @@ sigs.forEach(sig => {
 
 /* Handle shutdown */
 var shutdown = function () {
-    function logout() {
+    async function logout() {
         console.log(`Logging out ${client.user.tag}...`);
-        client.destroy();
+        await client.destroy();
         console.log('Goodbye!\n');
         process.exit();
     }
