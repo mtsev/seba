@@ -91,5 +91,6 @@ function getNames(user, callback) {
     connection.query(sqlString, values, async (error, results, fields) => {
         if (error) throw error;
         console.log(`Getting username history for ${user.tag}: ${results.length} rows returned`);
+        callback(results);
     });
 }
