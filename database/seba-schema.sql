@@ -7,7 +7,7 @@ Discord bot:    https://github.com/mtsev/seba
 Google script:  https://github.com/mtsev/seba-form-script
 --------------------------------------------------------------------
 Author:         Mandy Tao
-Version:        1.0
+Version:        1.1
 --------------------------------------------------------------------
 */
 
@@ -15,31 +15,37 @@ SET NAMES utf8mb4;
 
 -- create table for form submissions
 CREATE TABLE submissions (
-    submission_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    discord_name VARCHAR (50) NOT NULL,
-    real_name VARCHAR (50) NOT NULL,
-    email_address VARCHAR (50) NOT NULL,
-    zid VARCHAR (8),
-    phone_number VARCHAR (10)
+    submission_id   SMALLINT UNSIGNED   AUTO_INCREMENT PRIMARY KEY,
+    added_on        DATETIME            DEFAULT CURRENT_TIMESTAMP,
+    discord_name    VARCHAR (50)        NOT NULL,
+    real_name       VARCHAR (50)        NOT NULL,
+    email_address   VARCHAR (50)        NOT NULL,
+    zid             CHAR (8),
+    phone_number    VARCHAR (10)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- create table to for verified members
 CREATE TABLE verified_members (
-    member_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    discord_id VARCHAR (20) NOT NULL,
-    submission SMALLINT UNSIGNED NOT NULL,
+    member_id       SMALLINT UNSIGNED   AUTO_INCREMENT PRIMARY KEY,
+    discord_id      VARCHAR (20)        NOT NULL,
+    submission      SMALLINT UNSIGNED   NOT NULL,
+
     FOREIGN KEY (submission) REFERENCES submissions(submission_id) ON UPDATE CASCADE,
+
     UNIQUE (discord_id),
     UNIQUE (submission)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
 
 -- create table to track username changes
 CREATE TABLE username_history (
-    name_id SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    modified DATETIME DEFAULT CURRENT_TIMESTAMP,
-    username VARCHAR (20) NOT NULL,
-    discriminator VARCHAR (4) NOT NULL,
-    discord_id VARCHAR (20) NOT NULL,
+    name_id         SMALLINT UNSIGNED   AUTO_INCREMENT PRIMARY KEY,
+    modified        DATETIME            DEFAULT CURRENT_TIMESTAMP,
+    username        VARCHAR (20)        NOT NULL,
+    discriminator   CHAR (4)            NOT NULL,
+    discord_id      VARCHAR (20)        NOT NULL,
+
     FOREIGN KEY (discord_id) REFERENCES verified_members(discord_id)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
