@@ -1,7 +1,7 @@
 const fs = require('fs');
-const mysql = require('mysql');
 const Discord = require('discord.js');
 const { token, prefix } = require('./config.json');
+const { closeDatabase } = require('./database/interface.js');
 
 /* Format console.log */
 require('./modules/logging.js');
@@ -11,25 +11,13 @@ const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.prefix = prefix;
 
-/* Extra features enabled */
-if (fs.existsSync('./database/dbConfig.json')) {
-    console.log('Extra features enabled.');
-    client.extra = true;
-}
+/* Set optional features */
+client.extra = fs.existsSync('./extraConfig.json');
+client.database = fs.existsSync('./database/dbConfig.json');
 
-/* Database enabled, make global connection object */
-if (fs.existsSync('./database/dbConfig.json')) {
-    const db = require('./database/dbConfig.json');
-    client.database = mysql.createConnection({
-        host     : db.host,
-        port     : db.port,
-        user     : db.user,
-        password : db.password,
-        database : db.database,
-        charset : 'utf8mb4'
-    });
-    console.log('Database features enabled.');
-}
+/* Output to console if any optional features are enabled */
+if (client.extra) console.log('Extra features enabled');
+if (client.database) console.log('Database features enabled');
 
 /* Load and bind all events */
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
@@ -60,7 +48,7 @@ sigs.forEach(sig => {
 
 /* Handle shutdown */
 var shutdown = function () {
-    async function logout() {
+    var logout = async function () {
         console.log(`Logging out ${client.user.tag}...`);
         await client.destroy();
         console.log('Goodbye!\n');
@@ -69,10 +57,7 @@ var shutdown = function () {
 
     // Database enabled
     if (client.database) {
-        client.database.end( () => {
-            console.log('MySQL connection closed');
-            logout();
-        });
+        closeDatabase(logout);
     } else {
         logout();
     }
