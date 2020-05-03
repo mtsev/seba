@@ -2,8 +2,8 @@
 Seba can optionally use a MySQL database for extra features. These features are disabled by default unless `dbConfig.json` exists.
 
 Supported features include:
-* Command for execs to get any verified member's information from the database
-* Maintain username history for verified members
+* Command for execs to get verified members' information from the database
+* Command for execs to get verified members' username history
 
 ## Installation
 Install the `mysql-server` package.

@@ -1,7 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { token, prefix } = require('./config.json');
-const { closeDatabase } = require('./database/interface.js');
 
 /* Format console.log */
 require('./modules/logging.js');
@@ -37,6 +36,11 @@ for (const file of commandFiles) {
 /* Log onto Discord */
 client.login(token);
 
+/* Track any unhandled rejections */
+process.on('unhandledRejection', error => {
+	console.error('Unhandled promise rejection:', error);
+});
+
 /* Graceful shutdown */
 const sigs = ['SIGINT', 'SIGTERM', 'SIGQUIT'];
 sigs.forEach(sig => {
@@ -47,7 +51,7 @@ sigs.forEach(sig => {
 });
 
 /* Handle shutdown */
-var shutdown = function () {
+function shutdown () {
     var logout = async function () {
         console.log(`Logging out ${client.user.tag}...`);
         await client.destroy();
@@ -57,6 +61,7 @@ var shutdown = function () {
 
     // Database enabled
     if (client.database) {
+        const { closeDatabase } = require('./database/interface.js');
         closeDatabase(logout);
     } else {
         logout();
