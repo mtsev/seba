@@ -1,14 +1,27 @@
 const CronJob = require('cron').CronJob;
 const { categories, roles } = require('../config.json');
 const { latenights } = require('../extraConfig.json');
+var jobs = {};
 
 module.exports = {
-    showLateNights: showLateNights,
-    hideLateNights: hideLateNights,
+    setup: (guild) => {
+
+        // Check for existing jobs
+        if (jobs.show) return;
+        
+        // Instantiate jobs
+        jobs.show = show(guild);
+        jobs.hide = hide(guild);
+
+        // Start jobs
+        console.log('Starting late night cron jobs');
+        jobs.show.start();
+        jobs.hide.start();
+    }
 };
 
 // Show late night channels from 00:00, function returns cronjob
-function showLateNights(guild) {
+function show(guild) {
 
     let H = latenights.start.split(':')[0];
     let i = latenights.start.split(':')[1];
@@ -70,7 +83,7 @@ function showLateNights(guild) {
 }
 
 // Hide late night channels after 06:00, function returns cronjob
-function hideLateNights(guild) {
+function hide(guild) {
 
     let H = latenights.end.split(':')[0];
     let i = latenights.end.split(':')[1];

@@ -9,12 +9,14 @@ module.exports = (client) => {
     // Get guild
     guild = client.guilds.get(server.id);
 
+    // Set status message
+    client.user.setActivity('fb.com/unswlofisoc', { type: 'PLAYING' });
+
     // Extra features
     if (client.extra) {
 
         // Late nights
-        const { showLateNights, hideLateNights } = require('../modules/latenights.js');
-        showLateNights(guild).start();
-        hideLateNights(guild).start();
+        const { setup } = require('../modules/latenights.js');
+        setup(guild);
     }
 }
