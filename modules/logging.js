@@ -1,18 +1,24 @@
-/* console.log with datetime prepended */
+var util = require('util');
+
+/* timestamp format */
+function timestamp() { 
+    return `[${new Date().toLocaleString('en-GB')}]`;
+}
+
+/* console.log with timestamp prepended */
 var log = console.log;
 console.log = function () {
-    var first_parameter = arguments[0];
-    var other_parameters = Array.prototype.slice.call(arguments, 1);
-    var formatted = first_parameter ? `[${new Date().toLocaleString('en-GB')}] ` + first_parameter : '';
-    if (typeof first_parameter === 'string' && first_parameter.startsWith('┌')) formatted = first_parameter;
-    log.apply(console, [formatted].concat(other_parameters));
+    arguments[0] = (typeof arguments[0] === 'string' && arguments[0].startsWith('┌'))
+            ? timestamp() + ' ───── TABLE ─────\n' + arguments[0]
+            : util.format(timestamp(), arguments[0]);
+    log.apply(console, arguments);
 };
 
-/* console.error with datetime prepended */
+/* console.error with timestamp prepended */
 var err = console.error;
 console.error = function () {
-    var first_parameter = arguments[0];
-    var other_parameters = Array.prototype.slice.call(arguments, 1);
-    var formatted = first_parameter ? `[${new Date().toLocaleString('en-GB')}] ` + first_parameter : '';
-    err.apply(console, [formatted].concat(other_parameters));
+    arguments[0] = (typeof arguments[0] === 'string' && arguments[0].startsWith('┌'))
+            ? timestamp() + ' ───── TABLE ─────\n' + arguments[0]
+            : util.format(timestamp(), arguments[0]);
+    err.apply(console, arguments);
 };
