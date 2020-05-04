@@ -45,21 +45,14 @@ async function execute(guild, message, args) {
         // Optional database feature, check client if enabled
         if (message.client.database) {
 
-            const { addVerified, addUsername, getNames } = require('../database/interface.js');
-
-            // Start tracking username history
-            var addUser = function (history) {
-                const last = history.sort((a, b) => b.name_id - a.name_id).shift();
-                if (!last || last.username !== member.user.username 
-                          || last.discriminator != member.user.discriminator) {
-                    addUsername(member.user);
-                }
-            }
-            getNames(member.user, addUser);
+            const { addVerified, addUsername } = require('../database/interface.js');
 
             // Add new verified member to database
             // TODO -- indicate failure to admins
             addVerified(member.user);
+
+            // Start tracking username history
+            addUsername(member.user);
         } 
         
         // Add verified role to member

@@ -63,8 +63,8 @@ async function execute(guild, message, args) {
             let botReply = `Aliases for ${target.user.username}:\n`;
 
             // Add username history to reply
-            const unique = [...new Set(history.map(entry => entry.username))];
-            botReply += unique.reverse().join('\n');
+            const unique = [...new Set(history.reverse().map(entry => entry.username))];
+            botReply += unique.join('\n');
     
             await message.channel.send('```' + botReply + '```').catch(console.error);
         }

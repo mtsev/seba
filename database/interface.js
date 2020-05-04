@@ -4,6 +4,7 @@ const db = require('./dbConfig.json');
 module.exports = {
     closeDatabase: close,
     lookup: lookup,
+    isVerified: isVerified,
     addVerified: addVerified,
     addUsername: addUsername,
     getNames: getNames,
@@ -49,12 +50,36 @@ async function lookup(user, callback) {
             if (error) throw error;
             console.log(`Getting info for ${user.tag}: ${results.length} rows returned`); 
 
-            // Pass in first result to callback function, or NULL for no results
+            // Should get one result if member is verified. Pass in NULL if no results
             if (results.length === 0) {
                 await callback(null);
             } else {
                 await callback(results[0]);
             }
+        });
+    });
+}
+
+/* Check if user is already verified */
+function isVerified(user, callback) {
+
+    // Get connection from pool
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+
+        // Use most recent submission matching discord name
+        let sqlString = "SELECT EXISTS (SELECT 1 FROM verified_members WHERE discord_id = ?)";
+        let values = [user.id];
+
+        // Result should return single row with value 0 or 1
+        connection.query(sqlString, values, (error, results, fields) => {
+            connection.release();
+            
+            if (error) throw error;
+            console.log(`Checking if ${user.tag} is verified: ${results.length} rows returned`);
+
+            // Pass in value from EXISTS query
+            callback(Object.values(results[0])[0]);
         });
     });
 }
@@ -75,14 +100,14 @@ function addVerified(user) {
         connection.query(sqlString, values, (error, results, fields) => {
             connection.release();
 
-            if (error) { 
-                if (error.code === 'ER_DUP_ENTRY') {
-                    console.log(`Existing entry for verified member ${user.tag}`); 
-                } else {
-                    throw error;
-                }
-            } else {
+            if (!error) { 
                 console.log(`Adding verified member ${user.tag}: ${results.affectedRows} rows affected`); 
+            } else if (error.code === 'ER_DUP_ENTRY') {
+                // This error shouldn't happen since verified role is persistent
+                // But we'll catch it since it doesn't affect behaviour
+                console.error(`Existing entry for verified member ${user.tag}`); 
+            } else {
+                throw error;
             }
         });
     });
@@ -103,6 +128,7 @@ function addUsername(user) {
         // No callback function for user output, only log to console
         connection.query(sqlString, values, (error, results, fields) => {
             connection.release();
+
             if (error) throw error;
             console.log(`Adding username ${user.tag}: ${results.affectedRows} rows affected`);
         });
