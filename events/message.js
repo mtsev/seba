@@ -15,11 +15,10 @@ async function handleCommands(message) {
     const customPrefix = message.client.prefix;
 
     // Check whether default or custom prefix is being used
-    let usedPrefix;
     if (message.content.startsWith(customPrefix)) {
-        usedPrefix = customPrefix;
+        var usedPrefix = customPrefix;
     } else if (message.content.startsWith(prefix)) {
-        usedPrefix = prefix;
+        var usedPrefix = prefix;
     } else {
         return;
     }
@@ -36,10 +35,10 @@ async function handleCommands(message) {
     if (command.privileged && usedPrefix != customPrefix) return;
 
     // Get guild
-    var guild = message.client.guilds.get(server.id);
+    const guild = message.client.guilds.get(server.id);
 
     // Log all command uses
-    let channel = (message.channel.type === 'text') ? message.channel.name : 'DM';
+    const channel = (message.channel.type === 'text') ? message.channel.name : 'DM';
     console.log(`<${message.author.tag}> ${message.content} (${channel})`);
 
     // Check for exec only commmands
@@ -52,8 +51,9 @@ async function handleCommands(message) {
     try {
         await command.execute(guild, message, args);
     } catch (error) {
-        console.error(command.name + ':', error);
-        await message.reply("Sorry, an error has occurred. " +
-            "Please try again or ping an @exec if the problem doesn't go away.");
+        console.error(`Error executing command '${command.name}':`, error);
+        let botReply = "sorry, an error has occurred. ";
+        if (!command.privileged) botReply += "Please try again or ping an @exec if the problem doesn't go away.";
+        await message.reply(botReply).catch(console.error);
     }
 }

@@ -11,7 +11,7 @@ module.exports = {
 // Actual command to execute
 async function execute(guild, message, args) {
 
-    var botReply;
+    let botReply;
     let fromChannel;
     let toChannel;
 
@@ -63,21 +63,19 @@ async function execute(guild, message, args) {
 
         // Good to go!
         else {
-            // Counter to check if everyone got moved
-            let err = fromChannel.members.size;
-
             // Move everyone
-            fromChannel.members.forEach(async member => {
+            for (const member of fromChannel.members.values()) {
                 try {
-                    await member.setVoiceChannel(toChannel).then(err--);
+                    await member.setVoiceChannel(toChannel);
                 } catch (error) {
+                    console.error(`Couldn't move ${member.user.tag} from '${fromChannel.name}' to '${toChannel.name}':`);
                     console.error(error);
+                    throw error;
                 }
-            });
+            }
 
             // Set output message
-            botReply = err > 0 ? 'sorry, an error has occurred' : 
-                `moved everyone from \`${fromChannel.name}\` to \`${toChannel.name}\``;
+            botReply = `moved everyone from \`${fromChannel.name}\` to \`${toChannel.name}\``;
         }
     }
 

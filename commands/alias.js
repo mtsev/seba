@@ -27,7 +27,7 @@ async function execute(guild, message, args) {
     }
 
     // Concatenate all arguments into a single string
-    let arg = args.join(' ');
+    const arg = args.join(' ');
 
     // Parse argument to get target member
     let target;

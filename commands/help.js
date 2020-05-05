@@ -50,22 +50,16 @@ async function execute(guild, message, args) {
         await replyChannel.send(data);
     } catch(error) {
 
-        let errorMessage;
-
         // Cannot direct message member
         if (error.code === 50007) {
-            errorMessage = "I couldn't send you a DM. Please go to 'Privacy Settings'" +
-                "for this server and allow direct messages from server members.";
             console.error(`Couldn't DM user ${message.author.tag}`);
-        }
-
-        // Some other error has occurred
-        else {
-            errorMessage = 'sorry, an error has occurred.'
+            let errorMessage = "I couldn't send you a DM. Please go to 'Privacy Settings'" +
+                "for this server and allow direct messages from server members.";
+            await message.reply(errorMessage).catch(console.error);
+            
+        } else {
             console.error(error);
+            throw error;
         }
-
-        // Reply with error message
-        await message.reply(errorMessage).catch(console.error);
     }
 }
