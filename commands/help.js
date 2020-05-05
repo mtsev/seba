@@ -53,7 +53,7 @@ async function execute(guild, message, args) {
         // Cannot direct message member
         if (error.code === 50007) {
             console.error(`Couldn't DM user ${message.author.tag}`);
-            let errorMessage = "I couldn't send you a DM. Please go to 'Privacy Settings'" +
+            let errorMessage = "I couldn't send you a DM. Please go to 'Privacy Settings' " +
                 "for this server and allow direct messages from server members.";
             await message.reply(errorMessage).catch(console.error);
             

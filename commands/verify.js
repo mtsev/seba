@@ -75,6 +75,24 @@ async function execute(guild, message, args) {
                 `3. Ping an @exec in the #${verification} channel or email us at ${server.email} if it's still not working.`;
     }
 
-    // Send message to member
-    await message.author.send(botReply).catch(console.error);
+    // Send DM message to member
+    try {
+        await message.author.send(botReply);
+    } catch(error) {
+
+        // If we successfully verified the member, don't do anything
+        if (member.roles.has(roles.verified)) return;
+
+        // Cannot direct message member
+        if (error.code === 50007) {
+            console.error(`Couldn't DM user ${message.author.tag}`);
+            let errorMessage = "I couldn't send you a DM. Please go to 'Privacy Settings' " +
+                "for this server and allow direct messages from server members.";
+            await message.reply(errorMessage).catch(console.error);
+            
+        } else {
+            console.error(error);
+            throw error;
+        }
+    }
 }
