@@ -35,7 +35,7 @@ async function execute(guild, message, args) {
     }
 
     // Member is already verified
-    else if (member.roles.has(roles.verified)) {
+    else if (member.roles.cache.has(roles.verified)) {
         botReply = "You have already been verified. If you can't talk in the server, please message an exec.";
     }
 
@@ -56,7 +56,7 @@ async function execute(guild, message, args) {
         } 
         
         // Add verified role to member
-        await member.addRole(roles.verified).catch(console.error);
+        await member.roles.add(roles.verified).catch(console.error);
 
         // Output to user
         botReply = "Congratulations, you have been successfully verified. " +
@@ -67,7 +67,7 @@ async function execute(guild, message, args) {
     else {
         
         // Get name of verification channel
-        const verification = guild.channels.get(channels.verify).name;
+        const verification = guild.channels.cache.get(channels.verify).name;
         
         botReply = "**Sorry, your verification code was incorrect. Please try the following:**\n" +
                 "1. Check that the code was entered correctly and try again.\n" +
@@ -81,7 +81,7 @@ async function execute(guild, message, args) {
     } catch(error) {
 
         // If we successfully verified the member, don't do anything
-        if (member.roles.has(roles.verified)) return;
+        if (member.roles.cache.has(roles.verified)) return;
 
         // Cannot direct message member
         if (error.code === 50007) {

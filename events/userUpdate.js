@@ -12,14 +12,14 @@ module.exports = async (client, oldUser, newUser) => {
 }
 
 // Log username change to database
-async function usernameChange(oldUser, newUser) {
+function usernameChange(oldUser, newUser) {
 
     // Get guild and member
-    const guild = newUser.client.guilds.get(server.id);
+    const guild = newUser.client.guilds.cache.get(server.id);
     const member = guild.member(newUser);
 
     // Check that member is in guild and is verified
-    if (!member || !member.roles.has(roles.verified)) return;
+    if (!member || !member.roles.cache.has(roles.verified)) return;
 
     // Check that the change was the username
     if (oldUser.tag === newUser.tag) return;

@@ -35,7 +35,7 @@ async function handleCommands(message) {
     if (command.privileged && usedPrefix != customPrefix) return;
 
     // Get guild
-    const guild = message.client.guilds.get(server.id);
+    const guild = message.client.guilds.cache.get(server.id);
 
     // Log all command uses
     const channel = (message.channel.type === 'text') ? message.channel.name : 'DM';
@@ -44,7 +44,7 @@ async function handleCommands(message) {
     // Check for exec only commmands
     if (command.privileged) {
         const member = guild.member(message);
-        if (!member.roles.has(roles.exec)) return;
+        if (!member.roles.cache.has(roles.exec)) return;
     }
     
     // Execute command

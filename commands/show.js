@@ -23,7 +23,7 @@ async function execute(guild, message, args) {
     }
         
     // Get category object
-    const category = guild.channels.get(categories.moveable[args[0]]);
+    const category = guild.channels.cache.get(categories.moveable[args[0]]);
     const permsTable = [];
 
     try{
@@ -31,7 +31,7 @@ async function execute(guild, message, args) {
         await category.setPosition(2);
 
         // Allow verified members to access channels
-        await category.overwritePermissions(guild.roles.get(roles.verified), {
+        await category.updateOverwrite(roles.verified, {
             VIEW_CHANNEL: true,
             SEND_MESSAGES: true,
             CONNECT: true
@@ -41,7 +41,7 @@ async function execute(guild, message, args) {
         permsTable.push(getPerms(category, roles.verified));
 
         // Allow everyone to see channels
-        await category.overwritePermissions(guild.defaultRole, {
+        await category.updateOverwrite(guild.id, {
             VIEW_CHANNEL: true
         });
         

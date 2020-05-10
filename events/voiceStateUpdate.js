@@ -1,40 +1,31 @@
-const { server } = require('../config.json');
-
 // Export event so it can be used
-module.exports = async (client, oldMember, newMember) => {
+module.exports = async (client, oldState, newState) => {
 
     // Extra features
     if (client.extra) {
 
         // Gaming mode
-        const { lounge } = require('../extraConfig.json');
-        await gamingMode(lounge.id, oldMember, newMember);
+        gamingMode(oldState, newState);
     }
 }
 
 // Toggle game mode for lounge
-async function gamingMode(loungeID, oldMember, newMember) {
+function gamingMode(oldState, newState) {
 
-    // Load gaming module
+    const { lounge } = require('../extraConfig.json');
     const { setGameMode, setNormalMode } = require('../modules/gaming.js')
 
-    // Get guild
-    const guild = oldMember.client.guilds.get(server.id);
-
-    // Get the lounge channel
-    const lounge = guild.channels.get(loungeID);
-
     // Check if lounge was in old or new state
-    const oldLounge = (oldMember.voiceChannel === lounge);
-    const newLounge = (newMember.voiceChannel === lounge);
+    const oldLounge = (oldState.channelID === lounge.id);
+    const newLounge = (newState.channelID === lounge.id);
 
     // case: member joins the lounge
     if (!oldLounge && newLounge) {
-        setGameMode(lounge, newMember);
+        setGameMode(newState.channel, newState.member);
     }
 
     // case: member leaves the lounge
     else if (oldLounge && !newLounge) {
-        setNormalMode(lounge);
+        setNormalMode(oldState.channel);
     }
 }

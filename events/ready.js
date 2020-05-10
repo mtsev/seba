@@ -7,7 +7,7 @@ module.exports = (client) => {
     console.log(`Logged in as ${client.user.tag}!`);
 
     // Get guild
-    guild = client.guilds.get(server.id);
+    guild = client.guilds.cache.get(server.id);
 
     // Set status message
     client.user.setActivity('fb.com/unswlofisoc', { type: 'PLAYING' });

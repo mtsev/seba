@@ -19,7 +19,7 @@ async function execute(guild, message, args) {
     const data = [];
     const { commands } = message.client;
     let prefix = message.client.prefix;
-    if (/[a-zA-Z]$/.test(message.client.prefix)) prefix += ' ';
+    if (/[a-zA-Z0-9]$/.test(message.client.prefix)) prefix += ' ';
     
     if (!args.length) {
         data.push('```');

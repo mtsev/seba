@@ -6,9 +6,9 @@ module.exports = {
     setNormalMode: setNormalMode,
 };
 
-function inGame(member) {
+function inGame(presence) {
     let status = false;
-    member.presence.activities.forEach(game => {
+    presence.activities.forEach(game => {
         if (game.name === lounge.game) {
             status = true;
             return;
@@ -22,7 +22,7 @@ async function setGameMode(channel, member) {
     const guild = channel.guild;
 
     // If the member isn't playing game, we can ignore
-    if (!inGame(member)) return;
+    if (!inGame(member.presence)) return;
 
     // If the lounge is already game mode, we can ignore
     if (channel.name === lounge.gameMode) return;
@@ -31,7 +31,7 @@ async function setGameMode(channel, member) {
     await channel.setName(lounge.gameMode).catch(console.error);
 
     // Open access to everyone
-    await channel.overwritePermissions(guild.defaultRole, {
+    await channel.updateOverwrite(guild.id, {
         CONNECT: true,
         SPEAK: true
     }).catch(console.error);
@@ -47,7 +47,7 @@ async function setNormalMode(channel) {
     // check if anyone is still playing game in the lounge
     let stillPlaying = false;
     channel.members.forEach(member => {
-        if (inGame(member)) {
+        if (inGame(member.presence)) {
             stillPlaying = true;
             return;
         }

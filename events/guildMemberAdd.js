@@ -16,7 +16,7 @@ module.exports = async (client, member) => {
 async function welcome(member) {
     const message = `Welcome to ${server.name}, ${member}! ` +
             `Please read the <#${channels.rules}> and verify yourself to start chatting.`;
-    await member.client.channels.get(channels.welcome).send(message);
+    await member.guild.channels.cache.get(channels.welcome).send(message).catch(console.error);
 }
 
 // Persistent verification
@@ -30,7 +30,7 @@ async function verified(member) {
 
         // Give verified role to member
         console.log(`Giving role to previously verified member ${user.tag}`);
-        await member.addRole(roles.verified).catch(console.error);
+        await member.roles.add(roles.verified).catch(console.error);
 
         // Add username to history if different from previous
         var addUser = function (history) {

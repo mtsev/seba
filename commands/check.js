@@ -36,9 +36,9 @@ async function execute(guild, message, args) {
     if (taggedUser) {
         target = guild.member(taggedUser);
     } else if (arg.includes('#')) {
-        target = guild.members.find(member => member.user.tag === arg);
+        target = guild.members.cache.find(member => member.user.tag === arg);
     } else {
-        target = guild.members.find(member => member.user.username === arg
+        target = guild.members.cache.find(member => member.user.username === arg
                                             || member.nickname === arg);
     }
 
@@ -48,7 +48,7 @@ async function execute(guild, message, args) {
     }
 
     // Check if user has already been verified
-    else if (target.roles.has(roles.verified)) {
+    else if (target.roles.cache.has(roles.verified)) {
         const code = getPad(target.user.tag.toLowerCase() + seed, 6);
         botReply = `\`${target.user.tag}\` is already verified with code \`${code}\``;
     }

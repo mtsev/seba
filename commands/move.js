@@ -22,12 +22,13 @@ async function execute(guild, message, args) {
     if (args.length === 1) {
 
         // Get to and from channels
-        fromChannel = guild.member(message).voiceChannel;
-        toChannel = guild.channels.find(channel => channel.name === args[0]);
+        fromChannel = guild.member(message).voice.channel;
+        toChannel = guild.channels.cache.find(channel => channel.name === args[0]);
 
         // Check if channels exist
         if (!fromChannel) {
-            botReply = "please join voice channel to move from or specify in the command: ```!move <from_channel> <to_channel>```";
+            botReply = "please join voice channel to move from or specify in the command:" +
+                        "```!move <from_channel> <to_channel>```";
         } else if (!toChannel) {
             botReply = `couldn't find channel #${args[0]}`;
         }
@@ -35,8 +36,8 @@ async function execute(guild, message, args) {
 
     // If two arguments supplied, move from arg1 to arg2
     else if (args.length === 2) {
-        fromChannel = guild.channels.find(channel => channel.name === args[0]);
-        toChannel = guild.channels.find(channel => channel.name === args[1]);
+        fromChannel = guild.channels.cache.find(channel => channel.name === args[0]);
+        toChannel = guild.channels.cache.find(channel => channel.name === args[1]);
 
         // Check if channels exist
         if (!fromChannel) {
@@ -66,7 +67,7 @@ async function execute(guild, message, args) {
             // Move everyone
             for (const member of fromChannel.members.values()) {
                 try {
-                    await member.setVoiceChannel(toChannel);
+                    await member.voice.setChannel(toChannel);
                 } catch (error) {
                     console.error(`Couldn't move ${member.user.tag} from '${fromChannel.name}' to '${toChannel.name}':`);
                     console.error(error);

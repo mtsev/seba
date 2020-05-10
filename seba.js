@@ -53,9 +53,9 @@ sigs.forEach(sig => {
 
 /* Handle shutdown */
 function shutdown () {
-    var logout = async function () {
+    var logout = function () {
         console.log(`Logging out ${client.user.tag}...`);
-        await client.destroy();
+        client.destroy();
         console.log('Goodbye!\n');
         process.exit();
     }

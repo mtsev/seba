@@ -27,10 +27,10 @@ async function execute(guild, message, args) {
     const target = args[0] ? args[0] : 'events';
 
     // Get target category
-    const category = guild.channels.get(categories.moveable[target]);
+    const category = guild.channels.cache.get(categories.moveable[target]);
 
     // Get archive category
-    const archive = guild.channels.get(categories.archive);
+    const archive = guild.channels.cache.get(categories.archive);
 
     // Move all channels and sync permissions to archive
     for (const channel of category.children.values()) {
