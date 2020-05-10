@@ -1,12 +1,11 @@
-const { prefix, server, channels, roles, seed } = require('../config.json');
+const { server, channels, roles, seed } = require('../config.json');
 const { getPad } = require('../modules/random.js');
 
 // Export command so it can be used
 module.exports = {
     name: 'verify',
     description: 'Check if a given verification code is correct and update user role. ' +
-                 'Can only be used in verification channel or DM. ' +
-                 `Can be called with '${prefix}verify' regardless of prefix setting.`,
+                 'Can only be used in verification channel or DM.',
     usage: '<verification_code>',
     privileged: false,
     execute: execute,
@@ -88,7 +87,8 @@ async function execute(guild, message, args) {
             console.error(`Couldn't DM user ${message.author.tag}`);
             let errorMessage = "I couldn't send you a DM. Please go to 'Privacy Settings' " +
                 "for this server and allow direct messages from server members.";
-            await message.reply(errorMessage).catch(console.error);
+            const msg = await message.reply(errorMessage).catch(console.error);
+            await msg.delete({ timeout: 10000 }).catch(console.error);
             
         } else {
             console.error(error);

@@ -1,31 +1,27 @@
-const { categories } = require('../config.json');
+const { prefix } = require('../config.json');
 
 // Export command so it can be used
 module.exports = {
     name: 'help',
-    description: 'Show this message. Can be used in any channel and DM.',
+    description: 'Show this message. Can be used in any channel or DM.',
     usage: '[commands...]',
-    privileged: true,
+    privileged: false,
     execute: execute,
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
 
-    // Messages outside of DM or exec category are sent to DM
-    const replyChannel = (message.channel.type !== 'text' 
-        || message.channel.parentID !== categories.exec) ? message.author : message.channel;
-
     const data = [];
     const { commands } = message.client;
-    let prefix = message.client.prefix;
-    if (/[a-zA-Z0-9]$/.test(message.client.prefix)) prefix += ' ';
+    let customPrefix = message.client.prefix;
+    if (/[a-zA-Z0-9]$/.test(message.client.prefix)) customPrefix += ' ';
     
     if (!args.length) {
         data.push('```');
         data.push('Available commands:\n');
         data.push(`${commands.map(command => command.name).join(', ')}`);
-        data.push(`\nUse '${prefix}help [command]' for info on a specific command.`);
+        data.push(`\nUse '${customPrefix}help [command]' for info on a specific command.`);
         data.push('```');
     }
 
@@ -38,28 +34,14 @@ async function execute(guild, message, args) {
         }
 
         data.push('```');
-        if (command.usage) data.push(`${prefix}${command.name} ${command.usage}\n`);
-        if (command.privileged) data.push('Exec use only.\n');
+        if (command.usage) data.push(`${customPrefix}${command.name} ${command.usage}\n`);
+        if (command.privileged) data.push('Can only be used by exec.\n');
         if (command.description) data.push(command.description);
+        if (!command.privileged) data.push(`\nCan be called with '${prefix}${command.name}' ` +
+                                            "regardless of prefix setting.");
         data.push('```');
     }
 
-
     // Send help message
-    try {
-        await replyChannel.send(data);
-    } catch(error) {
-
-        // Cannot direct message member
-        if (error.code === 50007) {
-            console.error(`Couldn't DM user ${message.author.tag}`);
-            let errorMessage = "I couldn't send you a DM. Please go to 'Privacy Settings' " +
-                "for this server and allow direct messages from server members.";
-            await message.reply(errorMessage).catch(console.error);
-            
-        } else {
-            console.error(error);
-            throw error;
-        }
-    }
+    await message.channel.send(data).catch(console.error);
 }
