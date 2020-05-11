@@ -7,7 +7,7 @@ const { token, prefix } = require('./config.json');
 require('./modules/logging.js');
 
 /* Initialise client */
-const client = new Discord.Client();
+const client = new Discord.Client({ ws: { intents: Discord.Intents.ALL } });
 client.commands = new Discord.Collection();
 client.prefix = prefix;
 
