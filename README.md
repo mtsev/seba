@@ -21,11 +21,13 @@ You can run this bot in [Docker](https://docs.docker.com/get-docker/) on a Linux
 $ ./start
 ```
 
-Alternatively, you can manually install dependencies and run it. This bot requires Node.js to run.
+Alternatively, you can manually install dependencies and run it. This bot requires Node.js 12.x or higher to run.
 ```sh
 $ npm install
 $ npm start
 ```
+
+On Discord, the bot requires permissions integer `285281296` and privileged gateway intents `presence intent` and `server members intent`.
 
 ## Configuration
 Copy `config.json.example` to `config.json` and set the following values:

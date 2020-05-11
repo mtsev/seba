@@ -15,7 +15,8 @@ async function execute(guild, message, args) {
 
     // Missing argument(s)
     if (args.length === 0) {
-        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
+        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` + 
+                       `${module.exports.usage}\``;
         await message.reply(botReply).catch(console.error);
         return;
     }

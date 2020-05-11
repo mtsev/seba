@@ -21,7 +21,8 @@ async function execute(guild, message, args) {
         data.push('```');
         data.push('Available commands:\n');
         data.push(`${commands.map(command => command.name).join(', ')}`);
-        data.push(`\nUse '${customPrefix}help [command]' for info on a specific command.`);
+        data.push(`\nUse '${customPrefix}help <command>' ` +
+                  'for info on a specific command.');
         data.push('```');
     }
 
@@ -34,11 +35,15 @@ async function execute(guild, message, args) {
         }
 
         data.push('```');
-        if (command.usage) data.push(`${customPrefix}${command.name} ${command.usage}\n`);
-        if (command.privileged) data.push('Can only be used by exec.\n');
-        if (command.description) data.push(command.description);
-        if (!command.privileged) data.push(`\nCan be called with '${prefix}${command.name}' ` +
-                                            "regardless of prefix setting.");
+        if (command.usage)
+            data.push(`${customPrefix}${command.name} ${command.usage}\n`);
+        if (command.privileged)
+            data.push('Can only be used by exec.\n');
+        if (command.description)
+            data.push(command.description);
+        if (!command.privileged)
+            data.push(`\nCan be called with '${prefix}${command.name}' ` +
+                      "regardless of prefix setting.");
         data.push('```');
     }
 

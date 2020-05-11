@@ -3,7 +3,8 @@ const { categories, roles } = require('../config.json');
 // Export command so it can be used
 module.exports = {
     name: 'show',
-    description: 'Give verified members access to a category. Can be used in any channel.',
+    description: 'Give verified members access to a category. ' +
+                 'Can be used in any channel.',
     usage: `(${Object.keys(categories.moveable).join('|')})`,
     privileged: true,
     execute: execute,
@@ -17,7 +18,8 @@ async function execute(guild, message, args) {
 
     // Take one moveable category as argument
     if (args.length !== 1 || !(args[0] in categories.moveable)) {
-        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
+        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}\``;
         await message.reply(botReply).catch(console.error);
         return;
     }
@@ -28,7 +30,7 @@ async function execute(guild, message, args) {
 
     try{
         // Move category into position
-        await category.setPosition(2);
+        await category.setPosition(1);
 
         // Allow verified members to access channels
         await category.updateOverwrite(roles.verified, {
@@ -62,7 +64,8 @@ async function execute(guild, message, args) {
         console.table(permsTable);
 
         // Success message
-        let botReply = `${category.name} is now visible and accessible for verified members`;
+        let botReply = `${category.name} is now visible and accessible` +
+                       'for verified members';
         await message.reply(botReply).catch(console.error);
 
     } catch (error) {

@@ -4,7 +4,7 @@ const { getPad } = require('../modules/random.js');
 // Export command so it can be used
 module.exports = {
     name: 'check',
-    description: 'Check what the verification code of a given member is. ' + 
+    description: 'Check what the verification code of a given member is. ' +
                  'Can be used in verification channel and exec channels.',
     usage: '<discord_name>',
     privileged: true,
@@ -17,11 +17,13 @@ async function execute(guild, message, args) {
     let botReply;
 
     // Ignore messages outside verification channel or exec channels
-    if (message.channel.parentID !== categories.exec && message.channel.id !== channels.verify) return;
+    if (message.channel.parentID !== categories.exec 
+        && message.channel.id !== channels.verify) return;
 
     // Missing argument(s)
     if (args.length === 0) {
-        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
+        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}\``;
         await message.reply(botReply).catch(console.error);
         return;
     }

@@ -53,7 +53,8 @@ async function handleCommands(message) {
     } catch (error) {
         console.error(`Error executing command '${command.name}':`, error);
         let botReply = "sorry, an error has occurred. ";
-        if (!command.privileged) botReply += "Please try again or ping an @exec if the problem doesn't go away.";
+        if (!command.privileged) botReply += "Please try again " +
+                        "or ping an @exec if the problem doesn't go away.";
         await message.reply(botReply).catch(console.error);
     }
 }

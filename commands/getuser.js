@@ -17,11 +17,13 @@ async function execute(guild, message, args) {
     if (!message.client.database) return;
 
     // Ignore messages outside of exec category
-    if (message.channel.type !== 'text' || message.channel.parentID !== categories.exec) return;
+    if (message.channel.type !== 'text' 
+        || message.channel.parentID !== categories.exec) return;
 
     // Missing argument(s)
     if (args.length === 0) {
-        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
+        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}\``;
         await message.reply(botReply).catch(console.error);
         return;
     }
@@ -54,14 +56,15 @@ async function execute(guild, message, args) {
 
         // No info found for target member
         if (!info) {
-            let botReply = `couldn't find \`${target.user.tag}\` in the database, user hasn't verified`;
+            let botReply = `couldn't find \`${target.user.tag}\` ` +
+                           "in the database, user hasn't verified";
             await message.reply(botReply).catch(console.error);
     
         // Send formatted info to channel
         } else {
             // Formatted string of member information
-            let botReply = '```' + `Name:    ${info.real_name}\n` + 
-                        `Discord: ${target.user.tag}\nEmail:   ${info.email_address}`;
+            let botReply = `Name:    ${info.real_name}\nDiscord: ` +
+                           `${target.user.tag}\nEmail:   ${info.email_address}`;
     
             // Add zID if it was in the database
             if (info.zid) botReply += `\nzID:     ${info.zid}`;
@@ -69,10 +72,7 @@ async function execute(guild, message, args) {
             // Add phone number if it was in the database
             if (info.phone_number) botReply += `\nPhone:   ${info.phone_number}`;
     
-            // Close formatting
-            botReply += '```';
-    
-            await message.channel.send(botReply).catch(console.error);
+            await message.channel.send('```' + botReply + '```').catch(console.error);
         }
     }
 

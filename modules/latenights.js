@@ -37,7 +37,7 @@ function show(guild) {
 
         try {
             // Move category into position
-            await category.setPosition(2);
+            await category.setPosition(1);
 
             // Allow verified members to access channels
             await category.updateOverwrite(roles.verified, {

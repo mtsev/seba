@@ -48,7 +48,8 @@ async function lookup(user, callback) {
             connection.release();
 
             if (error) throw error;
-            console.log(`Getting info for ${user.tag}: ${results.length} rows returned`); 
+            console.log(`Getting info for ${user.tag}: `+ 
+                        `${results.length} rows returned`);
 
             // Should get one result if member is verified. Pass in NULL if no results
             if (results.length === 0) {
@@ -68,7 +69,8 @@ function isVerified(user, callback) {
         if (err) throw err;
 
         // Use most recent submission matching discord name
-        let sqlString = "SELECT EXISTS (SELECT 1 FROM verified_members WHERE discord_id = ?)";
+        let sqlString = "SELECT EXISTS (SELECT 1 FROM verified_members " +
+                        "WHERE discord_id = ?)";
         let values = [user.id];
 
         // Result should return single row with value 0 or 1
@@ -76,7 +78,8 @@ function isVerified(user, callback) {
             connection.release();
             
             if (error) throw error;
-            console.log(`Checking if ${user.tag} is verified: ${results.length} rows returned`);
+            console.log(`Checking if ${user.tag} is verified: ` +
+                        `${results.length} rows returned`);
 
             // Pass in value from EXISTS query
             callback(Object.values(results[0])[0]);
@@ -92,8 +95,9 @@ function addVerified(user) {
         if (err) throw err;
 
         // Use most recent submission matching discord name
-        let sqlString = "INSERT INTO verified_members (discord_id, submission) VALUES ( ?, " +
-                        "(SELECT MAX(submission_id) FROM submissions WHERE LOWER(discord_name) = ?))";
+        let sqlString = "INSERT INTO verified_members (discord_id, submission) " +
+                        "VALUES ( ?, (SELECT MAX(submission_id) " +
+                        "FROM submissions WHERE LOWER(discord_name) = ?))";
         let values = [user.id, user.tag.toLowerCase()];
 
         // No callback function for user output, only log to console
@@ -101,11 +105,12 @@ function addVerified(user) {
             connection.release();
 
             if (!error) { 
-                console.log(`Adding verified member ${user.tag}: ${results.affectedRows} rows affected`); 
+                console.log(`Adding verified member ${user.tag}: ` +
+                            `${results.affectedRows} rows affected`);
             } else if (error.code === 'ER_DUP_ENTRY') {
                 // This error shouldn't happen since verified role is persistent
                 // But we'll catch it since it doesn't affect behaviour
-                console.error(`Existing entry for verified member ${user.tag}`); 
+                console.error(`Existing entry for verified member ${user.tag}`);
             } else {
                 throw error;
             }
@@ -121,8 +126,8 @@ function addUsername(user) {
         if (err) throw err;
 
         // Add new entry into username history table
-        let sqlString = "INSERT INTO username_history (username, discriminator, discord_id) " +
-                        "VALUES ( ?, ?, ? )";
+        let sqlString = "INSERT INTO username_history " +
+                        "(username, discriminator, discord_id) VALUES ( ?, ?, ? )";
         let values = [user.username, user.discriminator, user.id];
 
         // No callback function for user output, only log to console
@@ -130,7 +135,8 @@ function addUsername(user) {
             connection.release();
 
             if (error) throw error;
-            console.log(`Adding username ${user.tag}: ${results.affectedRows} rows affected`);
+            console.log(`Adding username ${user.tag}: ` +
+                        `${results.affectedRows} rows affected`);
         });
     });
 }
@@ -143,7 +149,7 @@ function getNames(user, callback) {
         if (err) throw err;
 
         // Add new entry into username history table
-        let sqlString = "SELECT name_id, modified, username, discriminator " + 
+        let sqlString = "SELECT name_id, modified, username, discriminator " +
                         "FROM username_history WHERE discord_id = ?";
         let values = [user.id];
 
@@ -152,7 +158,8 @@ function getNames(user, callback) {
             connection.release();
 
             if (error) throw error;
-            console.log(`Getting username history for ${user.tag}: ${results.length} rows returned`);
+            console.log(`Getting username history for ${user.tag}: ` +
+                        `${results.length} rows returned`);
             callback(results);
         });
     });

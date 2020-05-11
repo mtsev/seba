@@ -4,7 +4,7 @@ const { getPad } = require('../modules/random.js');
 // Export command so it can be used
 module.exports = {
     name: 'verify',
-    description: 'Check if a given verification code is correct and update user role. ' +
+    description: 'Check if given verification code is correct and update user role. ' +
                  'Can only be used in verification channel or DM.',
     usage: '<verification_code>',
     privileged: false,
@@ -23,7 +23,7 @@ async function execute(guild, message, args) {
 
     // If the member isn't in the server, this should never happen
     if (!member) {
-        console.error(`'verify' called by ${message.author.tag} who isn't in the server`);
+        console.error(`'verify' called by ${message.author.tag} not in server`);
         return;
     }
 
@@ -35,7 +35,8 @@ async function execute(guild, message, args) {
 
     // Member is already verified
     else if (member.roles.cache.has(roles.verified)) {
-        botReply = "You have already been verified. If you can't talk in the server, please message an exec.";
+        botReply = "You have already been verified. " +
+                   "If you can't talk in the server, please message an exec.";
     }
 
     // Verification successful
@@ -68,10 +69,13 @@ async function execute(guild, message, args) {
         // Get name of verification channel
         const verification = guild.channels.cache.get(channels.verify).name;
         
-        botReply = "**Sorry, your verification code was incorrect. Please try the following:**\n" +
-                "1. Check that the code was entered correctly and try again.\n" +
-                "2. Check that your Discord tag is the same as what you entered into the form and try again.\n" +
-                `3. Ping an @exec in the #${verification} channel or email us at ${server.email} if it's still not working.`;
+        botReply = "**Sorry, your verification code was incorrect. " +
+            "Please try the following:**\n" +
+            "1. Check that the code was entered correctly and try again.\n" +
+            "2. Check that your Discord tag is the same as what you entered " +
+            "into the form and try again.\n" +
+            `3. Ping an @exec in the #${verification} channel or email us ` +
+            `at ${server.email} if it's still not working.`;
     }
 
     // Send DM message to member
@@ -85,8 +89,9 @@ async function execute(guild, message, args) {
         // Cannot direct message member
         if (error.code === 50007) {
             console.error(`Couldn't DM user ${message.author.tag}`);
-            let errorMessage = "I couldn't send you a DM. Please go to 'Privacy Settings' " +
-                "for this server and allow direct messages from server members.";
+            let errorMessage = "I couldn't send you a DM. " +
+                "Please go to 'Privacy Settings' for this server " +
+                "and allow direct messages from server members.";
             const msg = await message.reply(errorMessage).catch(console.error);
             await msg.delete({ timeout: 10000 }).catch(console.error);
             

@@ -27,7 +27,7 @@ async function execute(guild, message, args) {
 
         // Check if channels exist
         if (!fromChannel) {
-            botReply = "please join voice channel to move from or specify in the command:" +
+            botReply = "please join voice channel to move from or specify channel:" +
                         "```!move <from_channel> <to_channel>```";
         } else if (!toChannel) {
             botReply = `couldn't find channel #${args[0]}`;
@@ -49,7 +49,8 @@ async function execute(guild, message, args) {
 
     // Incorrect arguments supplied
     else {
-        botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
+        botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
+                   `${module.exports.usage}\``;
     }
 
     // If nothing has gone wrong so far, go ahead with the move
@@ -69,14 +70,16 @@ async function execute(guild, message, args) {
                 try {
                     await member.voice.setChannel(toChannel);
                 } catch (error) {
-                    console.error(`Couldn't move ${member.user.tag} from '${fromChannel.name}' to '${toChannel.name}':`);
+                    console.error(`Couldn't move ${member.user.tag} from ` +
+                                  `'${fromChannel.name}' to '${toChannel.name}':`);
                     console.error(error);
                     throw error;
                 }
             }
 
             // Set output message
-            botReply = `moved everyone from \`${fromChannel.name}\` to \`${toChannel.name}\``;
+            botReply = `moved everyone from \`${fromChannel.name}\` ` +
+                       `to \`${toChannel.name}\``;
         }
     }
 

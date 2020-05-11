@@ -6,9 +6,6 @@ module.exports = (client) => {
     // Log init to console
     console.log(`Logged in as ${client.user.tag}!`);
 
-    // Get guild
-    guild = client.guilds.cache.get(server.id);
-
     // Set status message
     client.user.setActivity('fb.com/unswlofisoc', { type: 'PLAYING' });
 
@@ -17,6 +14,7 @@ module.exports = (client) => {
 
         // Late nights
         const { setup } = require('../modules/latenights.js');
+        const guild = client.guilds.cache.get(server.id);
         setup(guild);
     }
 }

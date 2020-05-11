@@ -17,7 +17,8 @@ async function execute(guild, message, args) {
 
     // Invalid arguments given
     if (args.length !== 1 || !(args[0] in categories.moveable)) {
-        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ${module.exports.usage}\``;
+        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}\``;
         await message.reply(botReply).catch(console.error);
         return;
     }
