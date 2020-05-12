@@ -1,4 +1,8 @@
 #!/bin/bash
+echo Saving container logs...
+touch logs
+docker logs seba >> logs
+
 docker build -t mtsev/seba .
 
 echo Delete old container...
