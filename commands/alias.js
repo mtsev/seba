@@ -7,6 +7,7 @@ module.exports = {
                  'Can only be used in exec channels.',
     usage: '<discord_name>',
     privileged: true,
+    database: true,
     execute: execute,
 };
 
