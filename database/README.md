@@ -3,7 +3,7 @@ Seba can optionally use a MySQL database for extra features. These features are 
 
 Supported features include:
 * `getuser` command for execs to get verified members' information from the database
-* `alias` command for execs to get verified members' username history
+* `getalias` command for execs to get verified members' username history
 * Persistent verification: a verified user will retain the role if they leave and rejoin server
 
 ## Installation

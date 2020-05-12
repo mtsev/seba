@@ -2,7 +2,7 @@ const { categories } = require('../config.json');
 
 // Export command so it can be used
 module.exports = {
-    name: 'alias',
+    name: 'getalias',
     description: 'Get all the usernames a member has been known by. ' +
                  'Can only be used in exec channels.',
     usage: '<discord_name>',

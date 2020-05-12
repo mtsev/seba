@@ -1,6 +1,6 @@
 {
   "name": "seba",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Bot for UNSW lo-fi society Discord server",
   "main": "seba.js",
   "dependencies": {
