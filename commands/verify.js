@@ -49,10 +49,10 @@ async function execute(guild, message, args) {
 
             // Add new verified member to database
             // TODO -- indicate failure to admins
-            addVerified(member.user);
+            await addVerified(member.user);
 
             // Start tracking username history
-            addUsername(member.user);
+            await addUsername(member.user);
         } 
         
         // Add verified role to member

@@ -76,5 +76,5 @@ async function execute(guild, message, args) {
 
     // Lookup target member from database
     const { getNames } = require('../database/interface.js');
-    getNames(target.user, sendOutput);
+    await getNames(target.user, sendOutput);
 }

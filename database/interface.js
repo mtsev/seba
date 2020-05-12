@@ -62,7 +62,7 @@ async function lookup(user, callback) {
 }
 
 /* Check if user is already verified */
-function isVerified(user, callback) {
+async function isVerified(user, callback) {
 
     // Get connection from pool
     pool.getConnection((err, connection) => {
@@ -74,7 +74,7 @@ function isVerified(user, callback) {
         let values = [user.id];
 
         // Result should return single row with value 0 or 1
-        connection.query(sqlString, values, (error, results, fields) => {
+        connection.query(sqlString, values, async (error, results, fields) => {
             connection.release();
             
             if (error) throw error;
@@ -82,13 +82,13 @@ function isVerified(user, callback) {
                         `${results.length} rows returned`);
 
             // Pass in value from EXISTS query
-            callback(Object.values(results[0])[0]);
+            await callback(Object.values(results[0])[0]);
         });
     });
 }
 
 /* Add new verified user to database */
-function addVerified(user) {
+async function addVerified(user) {
 
     // Get connection from pool
     pool.getConnection((err, connection) => {
@@ -119,7 +119,7 @@ function addVerified(user) {
 }
 
 /* Log verified member's username change to database */
-function addUsername(user) {
+async function addUsername(user) {
 
     // Get connection from pool
     pool.getConnection((err, connection) => {
@@ -142,7 +142,7 @@ function addUsername(user) {
 }
 
 /* Look up username history for member */
-function getNames(user, callback) {
+async function getNames(user, callback) {
 
     // Get connection from pool
     pool.getConnection((err, connection) => {
@@ -160,7 +160,7 @@ function getNames(user, callback) {
             if (error) throw error;
             console.log(`Getting username history for ${user.tag}: ` +
                         `${results.length} rows returned`);
-            callback(results);
+            await callback(results);
         });
     });
 }
