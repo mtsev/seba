@@ -4,13 +4,10 @@ const { server, channels, roles } = require('../config.json');
 module.exports = async (client, member) => {
     await welcome(member);
 
-    // Database features
     if (client.database) {
-
-        // Check if member previously verified
         verified(member);
     }
-}
+};
 
 // Send welcome message
 async function welcome(member) {
@@ -21,7 +18,6 @@ async function welcome(member) {
 
 // Persistent verification
 async function verified(member) {
-
     const { isVerified, addUsername, getNames } = require('../database/interface.js');
     const user = member.user;
 
@@ -41,13 +37,13 @@ async function verified(member) {
                 console.error(`No username history found for ${user.tag}`);
             }
 
-            else if (last.username !== user.username 
-                    || last.discriminator != user.discriminator) {
+            else if (last.username !== user.username ||
+                    last.discriminator !== user.discriminator) {
                 addUsername(user);
             }
-        }
+        };
         getNames(user, addUser);
-    }
+    };
 
     // Lookup target member from database
     isVerified(user, addRole);

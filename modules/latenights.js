@@ -5,10 +5,9 @@ var jobs = {};
 
 module.exports = {
     setup: (guild) => {
-
         // Check for existing jobs
         if (jobs.show) return;
-        
+
         // Instantiate jobs
         jobs.show = show(guild);
         jobs.hide = hide(guild);
@@ -22,18 +21,16 @@ module.exports = {
 
 // Show late night channels, function returns cron job
 function show(guild) {
-
-    let H = latenights.start.split(':')[0];
-    let i = latenights.start.split(':')[1];
+    const H = latenights.start.split(':')[0];
+    const i = latenights.start.split(':')[1];
 
     // Make cron job to set up channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
-
         // Log cron job firing
-        console.log("Showing late night channels...");
-        
+        console.log('Showing late night channels...');
+
         const category = guild.channels.cache.get(latenights.id);
-        let permsTable = [];
+        const permsTable = [];
 
         try {
             // Move category into position
@@ -41,17 +38,16 @@ function show(guild) {
 
             // Allow verified members to access channels
             await category.updateOverwrite(roles.verified, {
-                VIEW_CHANNEL: true,
+                VIEW_CHANNEL:  true,
                 SEND_MESSAGES: true,
-                CONNECT: true
+                CONNECT:       true
             });
 
             // Log the perms for category for debugging
             permsTable.push(getPerms(category, roles.verified));
-            
+
             // Sync permissions for all channels
             for (const channel of category.children.values()) {
-
                 // Only sync if necessary
                 if (!channel.permissionsLocked) {
                     console.log('Syncing perms for', channel.name);
@@ -64,7 +60,6 @@ function show(guild) {
 
             // Log perms to console
             console.table(permsTable);
-
         } catch (error) {
             console.error("Couldn't show 'late nights':", error);
         }
@@ -73,27 +68,24 @@ function show(guild) {
 
 // Hide late night channels, function returns cron job
 function hide(guild) {
-
-    let H = latenights.end.split(':')[0];
-    let i = latenights.end.split(':')[1];
+    const H = latenights.end.split(':')[0];
+    const i = latenights.end.split(':')[1];
 
     // Make new cron job to pack down channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
-
         // Log cron job firing
-        console.log("Hiding late night channels...");
+        console.log('Hiding late night channels...');
 
         const category = guild.channels.cache.get(latenights.id);
         const position = guild.channels.cache.get(categories.exec).position + 1;
         const permsTable = [];
 
         try {
-
             // Remove verified members permissions
             await category.updateOverwrite(roles.verified, {
-                VIEW_CHANNEL: false,
+                VIEW_CHANNEL:  false,
                 SEND_MESSAGES: false,
-                CONNECT: false
+                CONNECT:       false
             });
 
             // Hide channels from everyone
@@ -103,10 +95,9 @@ function hide(guild) {
 
             // Log the perms for category for debugging
             permsTable.push(getPerms(category, roles.verified));
-            
+
             // Sync permissions for all channels
             for (const channel of category.children.values()) {
-
                 // Only sync if necessary
                 if (!channel.permissionsLocked) {
                     console.log('Syncing perms for', channel.name);
@@ -122,7 +113,6 @@ function hide(guild) {
 
             // Log perms to console
             console.table(permsTable);
-
         } catch (error) {
             console.error("Couldn't hide 'late nights':", error);
         }
@@ -131,10 +121,10 @@ function hide(guild) {
 
 function getPerms(channel, role) {
     const perms = channel.permissionsFor(role).serialize(true);
-    return { 
-        channel: channel.name,
-        VIEW_CHANNEL: perms.VIEW_CHANNEL,
+    return {
+        channel:       channel.name,
+        VIEW_CHANNEL:  perms.VIEW_CHANNEL,
         SEND_MESSAGES: perms.SEND_MESSAGES,
-        CONNECT: perms.CONNECT
+        CONNECT:       perms.CONNECT
     };
 }

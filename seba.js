@@ -23,7 +23,7 @@ if (client.database) console.log('Database features enabled');
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
-    let eventName = file.split(".")[0];
+    const eventName = file.split('.')[0];
     client.on(eventName, event.bind(null, client));
 }
 
@@ -40,7 +40,7 @@ client.login(token);
 
 /* Track any unhandled rejections */
 process.on('unhandledRejection', error => {
-	console.error('Unhandled promise rejection:', error);
+    console.error('Unhandled promise rejection:', error);
 });
 
 /* Graceful shutdown */
@@ -53,13 +53,13 @@ sigs.forEach(sig => {
 });
 
 /* Handle shutdown */
-function shutdown () {
+function shutdown() {
     var logout = function () {
         console.log(`Logging out ${client.user.tag}...`);
         client.destroy();
         console.log('Goodbye!\n');
         process.exit();
-    }
+    };
 
     // Database enabled
     if (client.database) {

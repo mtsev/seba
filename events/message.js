@@ -3,11 +3,10 @@ const { prefix, server, roles } = require('../config.json');
 // Export event so it can be used
 module.exports = async (client, message) => {
     await handleCommands(message);
-}
+};
 
 // Command handler
 async function handleCommands(message) {
-
     // Ignore messages from bots
     if (message.author.bot) return;
 
@@ -32,7 +31,7 @@ async function handleCommands(message) {
     if (!command) return;
 
     // Only allow non-privileged commands to use default prefix
-    if (command.privileged && usedPrefix != customPrefix) return;
+    if (command.privileged && usedPrefix !== customPrefix) return;
 
     // Get guild
     const guild = message.client.guilds.cache.get(server.id);
@@ -46,15 +45,16 @@ async function handleCommands(message) {
         const member = guild.member(message);
         if (!member.roles.cache.has(roles.exec)) return;
     }
-    
+
     // Execute command
     try {
         await command.execute(guild, message, args);
     } catch (error) {
         console.error(`Error executing command '${command.name}':`, error);
-        let botReply = "sorry, an error has occurred. ";
-        if (!command.privileged) botReply += "Please try again " +
-                        "or ping an @exec if the problem doesn't go away.";
+        let botReply = 'sorry, an error has occurred. ';
+        if (!command.privileged) {
+            botReply += "Please try again or ping an @exec if the problem doesn't go away.";
+        }
         await message.reply(botReply).catch(console.error);
     }
 }

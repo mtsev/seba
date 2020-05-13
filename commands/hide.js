@@ -2,27 +2,26 @@ const { categories, roles } = require('../config.json');
 
 // Export command so it can be used
 module.exports = {
-    name: 'hide',
+    name:        'hide',
     description: 'Hide category from verified members. Can be used in any channel.',
-    usage: `(${Object.keys(categories.moveable).join('|')})`,
-    privileged: true,
-    execute: execute,
+    usage:       `(${Object.keys(categories.moveable).join('|')})`,
+    privileged:  true,
+    execute:     execute
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
-
     // Ignore DMs
     if (message.channel.type !== 'text') return;
 
     // Invalid arguments given
     if (args.length !== 1 || !(args[0] in categories.moveable)) {
-        let botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
+        const botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
                        `${module.exports.usage}\``;
         await message.reply(botReply).catch(console.error);
         return;
     }
-        
+
     // Get category object
     const category = guild.channels.cache.get(categories.moveable[args[0]]);
     const position = guild.channels.cache.get(categories.exec).position + 1;
@@ -31,9 +30,9 @@ async function execute(guild, message, args) {
     try {
         // Remove verified members permissions
         await category.updateOverwrite(roles.verified, {
-            VIEW_CHANNEL: false,
+            VIEW_CHANNEL:  false,
             SEND_MESSAGES: false,
-            CONNECT: false
+            CONNECT:       false
         });
 
         // Log the perms for category for debugging
@@ -46,7 +45,6 @@ async function execute(guild, message, args) {
 
         // Sync permissions for all channels
         for (const channel of category.children.values()) {
-
             // Only sync if necessary
             if (!channel.permissionsLocked) {
                 console.log('Syncing perms for', channel.name);
@@ -64,9 +62,8 @@ async function execute(guild, message, args) {
         console.table(permsTable);
 
         // Success message
-        let botReply = `${category.name} has been hidden from members`;
+        const botReply = `${category.name} has been hidden from members`;
         await message.reply(botReply).catch(console.error);
-
     } catch (error) {
         console.error(`Couldn't hide '${args[0]}':`, error);
         throw error;
@@ -75,10 +72,10 @@ async function execute(guild, message, args) {
 
 function getPerms(channel, role) {
     const perms = channel.permissionsFor(role).serialize(true);
-    return { 
-        channel: channel.name,
-        VIEW_CHANNEL: perms.VIEW_CHANNEL,
+    return {
+        channel:       channel.name,
+        VIEW_CHANNEL:  perms.VIEW_CHANNEL,
         SEND_MESSAGES: perms.SEND_MESSAGES,
-        CONNECT: perms.CONNECT
+        CONNECT:       perms.CONNECT
     };
 }

@@ -1,16 +1,15 @@
 // Export command so it can be used
 module.exports = {
-    name: 'move',
+    name:        'move',
     description: 'Move all members from one voice channel to another. ' +
                  'Can be used in any channel.',
-    usage: '[from_channel] <to_channel>',
+    usage:      '[from_channel] <to_channel>',
     privileged: true,
-    execute: execute,
+    execute:    execute
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
-
     let botReply;
     let fromChannel;
     let toChannel;
@@ -20,15 +19,13 @@ async function execute(guild, message, args) {
 
     // If only one argument supplied, move from user's current channel
     if (args.length === 1) {
-
-        // Get to and from channels
         fromChannel = guild.member(message).voice.channel;
         toChannel = guild.channels.cache.find(channel => channel.name === args[0]);
 
         // Check if channels exist
         if (!fromChannel) {
-            botReply = "please join voice channel to move from or specify channel:" +
-                        "```!move <from_channel> <to_channel>```";
+            botReply = 'please join voice channel to move from or specify channel:' +
+                        '```!move <from_channel> <to_channel>```';
         } else if (!toChannel) {
             botReply = `couldn't find channel #${args[0]}`;
         }
@@ -55,7 +52,6 @@ async function execute(guild, message, args) {
 
     // If nothing has gone wrong so far, go ahead with the move
     if (!botReply) {
-
         // Check that both channels are actually voice channels
         if (fromChannel.type !== 'voice') {
             botReply = `\`${fromChannel.name}\` is not a voice channel, please try again`;

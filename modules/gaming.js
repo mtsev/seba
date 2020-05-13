@@ -1,9 +1,9 @@
 const { lounge } = require('../extraConfig.json');
 
 module.exports = {
-    inGame: inGame,
-    setGameMode: setGameMode,
-    setNormalMode: setNormalMode,
+    inGame:        inGame,
+    setGameMode:   setGameMode,
+    setNormalMode: setNormalMode
 };
 
 function inGame(presence) {
@@ -11,7 +11,6 @@ function inGame(presence) {
     presence.activities.forEach(game => {
         if (game.name === lounge.game) {
             status = true;
-            return;
         }
     });
     return status;
@@ -33,14 +32,13 @@ async function setGameMode(channel, member) {
     // Open access to everyone
     await channel.updateOverwrite(guild.id, {
         CONNECT: true,
-        SPEAK: true
+        SPEAK:   true
     }).catch(console.error);
 
-    console.log("Game mode set by", member.user.tag);
+    console.log('Game mode set by', member.user.tag);
 }
 
 async function setNormalMode(channel) {
-
     // if the lounge isn't game mode, we can ignore
     if (channel.name !== lounge.gameMode) return;
 
@@ -49,7 +47,6 @@ async function setNormalMode(channel) {
     channel.members.forEach(member => {
         if (inGame(member.presence)) {
             stillPlaying = true;
-            return;
         }
     });
 

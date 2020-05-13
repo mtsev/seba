@@ -1,19 +1,14 @@
 // Export event so it can be used
 module.exports = async (client, oldPresence, newPresence) => {
-
-    // Extra features
     if (client.extra) {
-
-        // Gaming mode
         gamingMode(oldPresence, newPresence);
     }
-}
+};
 
 // Toggle game mode for lounge
 function gamingMode(oldPresence, newPresence) {
-
     const { lounge } = require('../extraConfig.json');
-    const { inGame, setGameMode, setNormalMode } = require('../modules/gaming.js')
+    const { inGame, setGameMode, setNormalMode } = require('../modules/gaming.js');
 
     // Check that the member is in lounge
     if (newPresence.member.voice.channelID !== lounge.id) return;

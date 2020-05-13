@@ -2,18 +2,13 @@ const { server, roles } = require('../config.json');
 
 // Export event so it can be used
 module.exports = async (client, oldUser, newUser) => {
-
-    // Database features
     if (client.database) {
-
-        // Track username change
         usernameChange(oldUser, newUser);
     }
-}
+};
 
 // Log username change to database
 function usernameChange(oldUser, newUser) {
-
     // Get guild and member
     const guild = newUser.client.guilds.cache.get(server.id);
     const member = guild.member(newUser);
@@ -27,5 +22,4 @@ function usernameChange(oldUser, newUser) {
     // Add username to database
     const { addUsername } = require('../database/interface.js');
     addUsername(newUser);
-
 }

@@ -4,10 +4,10 @@ module.exports = {
 
         // Create xmur3 state
         var seed = xmur3(string);
-        
+
         // Output 32-bit hash to provide the seed for mulberry32
         var rand = mulberry32(seed());
-        
+
         // Generate n-digit pseudo-random number
         return rand().toString().slice(2, n+2);
     }

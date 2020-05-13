@@ -1,7 +1,7 @@
 var util = require('util');
 
 /* timestamp format */
-function timestamp() { 
+function timestamp() {
     return `[${new Date().toLocaleString('en-GB')}]`;
 }
 
@@ -9,8 +9,8 @@ function timestamp() {
 var log = console.log;
 console.log = function () {
     arguments[0] = (typeof arguments[0] === 'string' && arguments[0].startsWith('┌'))
-            ? timestamp() + ' ───── TABLE ─────\n' + arguments[0]
-            : util.format(timestamp(), arguments[0]);
+        ? timestamp() + ' ───── TABLE ─────\n' + arguments[0]
+        : util.format(timestamp(), arguments[0]);
     log.apply(console, arguments);
 };
 
@@ -18,7 +18,7 @@ console.log = function () {
 var err = console.error;
 console.error = function () {
     arguments[0] = (typeof arguments[0] === 'string' && arguments[0].startsWith('┌'))
-            ? timestamp() + ' ───── TABLE ─────\n' + arguments[0]
-            : util.format(timestamp(), arguments[0]);
+        ? timestamp() + ' ───── TABLE ─────\n' + arguments[0]
+        : util.format(timestamp(), arguments[0]);
     err.apply(console, arguments);
 };
