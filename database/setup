@@ -17,10 +17,10 @@ else
 
 	# MySQL statements to set up new database and user
 	read -r -d '' statements <<-EOF
-		CREATE DATABASE $database DEFAULT CHARACTER SET utf8mb4;
+		CREATE DATABASE IF NOT EXISTS $database DEFAULT CHARACTER SET utf8mb4;
 		USE $database; 
 		SOURCE seba-schema.sql;
-		CREATE USER $user@$host IDENTIFIED BY '$password';
+		CREATE USER IF NOT EXISTS $user@$host IDENTIFIED BY '$password';
 		GRANT SELECT, INSERT ON $database.verified_members TO '$user'@'$host';
 		GRANT SELECT, INSERT ON $database.username_history TO '$user'@'$host';
 		GRANT SELECT ON $database.submissions TO '$user'@'$host';
