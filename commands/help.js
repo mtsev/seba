@@ -31,7 +31,7 @@ async function execute(guild, message, args) {
         const command = commands.get(name);
 
         if (!command) {
-            return message.reply(`No command called \`${name}\` found.`);
+            return message.channel.send(`No command called \`${name}\` found.`);
         }
 
         data.push('```');

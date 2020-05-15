@@ -2,7 +2,7 @@
 module.exports = {
     name:        'emoji',
     description: 'Restrict the usage of an emoji to specific roles. ',
-    usage:       '(add|remove|set) <emoji name> <role names...>',
+    usage:       '(add|remove|set) <emoji> <roles...>',
     privileged:  true,
     execute:     execute
 };
@@ -16,21 +16,24 @@ async function execute(guild, message, args) {
 
     // Accepts at least 3 arguments: subcommand, emoji and role
     if (args.length < 3 || !['add', 'remove', 'set'].includes(args[0])) {
-        botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}\``;
-        await message.reply(botReply).catch(console.error);
+        botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}`;
+        const msg = await message.reply('```' + botReply + '```').catch(console.error);
+        await msg.delete({ timeout: 10000 }).catch(console.error);
         return;
     }
 
     // Parse arguments
     const subcommand = args.shift().toLowerCase(); // args[0]
-    const emojiName = args.shift(); // args[1]
+
+    // TODO: parse emoji properly
+    const emojiName = args.shift().toLowerCase(); // args[1]
 
     // Get emoji
-    const emoji = guild.emojis.cache.find(e => e.name === emojiName);
+    const emoji = guild.emojis.cache.find(e => e.name.toLowerCase() === emojiName);
     if (!emoji) {
-        botReply = `couldn't find emoji called \`${emojiName}\``;
-        await message.reply(botReply).catch(console.error);
+        botReply = `Couldn't find emoji called \`${emojiName}\``;
+        await message.channel.send(botReply).catch(console.error);
         return;
     }
 
@@ -38,19 +41,21 @@ async function execute(guild, message, args) {
     const roles = [];
     const roleNames = [];
     args.forEach(arg => {
+        // Case insensitive search
+        arg = arg.toLowerCase();
         guild.roles.cache.forEach(role => {
             // Specifically handle @everyone to avoid stupid pings
-            if (role.name === arg ||
+            if (role.name.toLowerCase() === arg ||
                     (role.name === '@everyone' && arg === 'everyone')) {
                 roles.push(role);
-                roleNames.push(arg);
+                roleNames.push(role.name);
             }
         });
     });
 
     if (roles.length === 0) {
-        botReply = `couldn't find any roles matching: \`${args.join('`, `')}\``;
-        await message.reply(botReply).catch(console.error);
+        botReply = `Couldn't find any roles matching: \`${args.join('`, `')}\``;
+        await message.channel.send(botReply).catch(console.error);
         return;
     }
 
@@ -72,13 +77,13 @@ async function execute(guild, message, args) {
         await emoji.roles.remove(roles).catch(console.error);
         console.log(`Removed roles '${roleNames.join("', '")}' from emoji :${emoji.name}:`);
         botReply = `removed role \`${roleNames.join('`, `')}\` from ${emoji}`;
-        break;
     }
 
     // Make sure seba can actually use the emoji in his reply
-    const seba = guild.roles.cache.get(guild.client.user.id);
+    // It's a bit slow though so rework this later
+    const seba = guild.roles.cache.find(r => r.name === 'seba');
     if (!emoji.roles.cache.has(seba)) {
         await emoji.roles.add(seba).catch(console.error);
     }
-    await message.reply(botReply).catch(console.error);
+    await message.channel.send(botReply).catch(console.error);
 }

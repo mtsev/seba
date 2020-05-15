@@ -4,7 +4,7 @@ const { categories, roles } = require('../config.json');
 module.exports = {
     name:        'hide',
     description: 'Hide category from verified members. Can be used in any channel.',
-    usage:       `(${Object.keys(categories.moveable).join('|')})`,
+    usage:       `<category>\n  category: ${Object.keys(categories.moveable).join(', ')}`,
     privileged:  true,
     execute:     execute
 };
@@ -15,15 +15,17 @@ async function execute(guild, message, args) {
     if (message.channel.type !== 'text') return;
 
     // Invalid arguments given
-    if (args.length !== 1 || !(args[0] in categories.moveable)) {
-        const botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}\``;
-        await message.reply(botReply).catch(console.error);
+    if (args.length !== 1 || !(args[0].toLowerCase() in categories.moveable)) {
+        const botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}`;
+        const msg = await message.reply('```' + botReply + '```').catch(console.error);
+        await msg.delete({ timeout: 10000 }).catch(console.error);
         return;
     }
 
     // Get category object
-    const category = guild.channels.cache.get(categories.moveable[args[0]]);
+    const target = args[0].toLowerCase();
+    const category = guild.channels.cache.get(categories.moveable[target]);
     const position = guild.channels.cache.get(categories.exec).position + 1;
     const permsTable = [];
 
@@ -63,9 +65,9 @@ async function execute(guild, message, args) {
 
         // Success message
         const botReply = `${category.name} has been hidden from members`;
-        await message.reply(botReply).catch(console.error);
+        await message.channel.send(botReply).catch(console.error);
     } catch (error) {
-        console.error(`Couldn't hide '${args[0]}':`, error);
+        console.error(`Couldn't hide '${target}':`, error);
         throw error;
     }
 }

@@ -21,14 +21,15 @@ async function execute(guild, message, args) {
 
     // Missing argument(s)
     if (args.length === 0) {
-        botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}\``;
-        await message.reply(botReply).catch(console.error);
+        botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}`;
+        const msg = await message.reply('```' + botReply + '```').catch(console.error);
+        await msg.delete({ timeout: 10000 }).catch(console.error);
         return;
     }
 
     // Concatenate all arguments into a single string
-    const arg = args.join(' ');
+    const arg = args.join(' ').toLowerCase();
 
     // Parse argument to get target member
     let target;
@@ -38,16 +39,22 @@ async function execute(guild, message, args) {
         target = guild.member(taggedUser);
     } else if (arg.includes('#')) {
         target = guild.members.cache
-            .find(member => member.user.tag === arg);
+            .find(member => member.user.tag.toLowerCase() === arg);
     } else {
         target = guild.members.cache
-            .find(member => member.user.username === arg ||
-                            member.nickname === arg);
+            .find(member => member.user.username.toLowerCase() === arg);
+    }
+
+    // Check if the name entered was a nickname
+    if (!target) {
+        target = guild.members.cache
+            .find(member => member.nickname &&
+                member.nickname.toLowerCase() === arg);
     }
 
     // Check that the target member is actually in the server
     if (!target) {
-        botReply = `couldn't find \`${arg}\` in the server`;
+        botReply = `Couldn't find \`${arg}\` in the server`;
     }
 
     // Check if user has already been verified
@@ -63,5 +70,5 @@ async function execute(guild, message, args) {
     }
 
     // Send message to member
-    await message.reply(botReply).catch(console.error);
+    await message.channel.send(botReply).catch(console.error);
 }

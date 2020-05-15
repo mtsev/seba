@@ -14,6 +14,7 @@ module.exports = {
 // Actual command to execute
 async function execute(guild, message, args) {
     if (!message.client.database) return;
+    let botReply;
 
     // Ignore messages outside of exec category
     if (message.channel.type !== 'text' ||
@@ -21,14 +22,15 @@ async function execute(guild, message, args) {
 
     // Missing argument(s)
     if (args.length === 0) {
-        const botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}\``;
-        await message.reply(botReply).catch(console.error);
+        botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}`;
+        const msg = await message.reply('```' + botReply + '```').catch(console.error);
+        await msg.delete({ timeout: 10000 }).catch(console.error);
         return;
     }
 
     // Concatenate all arguments into a single string
-    const arg = args.join(' ');
+    const arg = args.join(' ').toLowerCase();
 
     // Parse argument to get target member
     let target;
@@ -38,17 +40,23 @@ async function execute(guild, message, args) {
         target = guild.member(taggedUser);
     } else if (arg.includes('#')) {
         target = guild.members.cache
-            .find(member => member.user.tag === arg);
+            .find(member => member.user.tag.toLowerCase() === arg);
     } else {
         target = guild.members.cache
-            .find(member => member.user.username === arg ||
-                            member.nickname === arg);
+            .find(member => member.user.username.toLowerCase() === arg);
+    }
+
+    // Check if the name entered was a nickname
+    if (!target) {
+        target = guild.members.cache
+            .find(member => member.nickname &&
+                member.nickname.toLowerCase() === arg);
     }
 
     // Check that the target member is actually in the server
     if (!target) {
-        const botReply = `couldn't find \`${arg}\` in the server`;
-        await message.reply(botReply).catch(console.error);
+        botReply = `Couldn't find \`${arg}\` in the server`;
+        await message.channel.send(botReply).catch(console.error);
         return;
     }
 
@@ -56,25 +64,29 @@ async function execute(guild, message, args) {
     var sendOutput = async function (info) {
         // No info found for target member
         if (!info) {
-            const botReply = `couldn't find \`${target.user.tag}\` ` +
-                           "in the database, user hasn't verified";
-            await message.reply(botReply).catch(console.error);
+            botReply = `couldn't find \`${target.user.tag}\` ` +
+                       "in the database, user hasn't verified";
         }
 
         // Send formatted info to channel
         else {
             // Formatted string of member information
-            let botReply = `Name:    ${info.real_name}\nDiscord: ` +
-                           `${target.user.tag}\nEmail:   ${info.email_address}`;
+            botReply = `Name:    ${info.real_name}\nDiscord: ` +
+                       `${target.user.tag}\nEmail:   ${info.email_address}`;
 
             // Add zID if it was in the database
-            if (info.zid) botReply += `\nzID:     ${info.zid}`;
-
+            if (info.zid) {
+                botReply += `\nzID:     ${info.zid}`;
+            }
             // Add phone number if it was in the database
-            if (info.phone_number) botReply += `\nPhone:   ${info.phone_number}`;
+            if (info.phone_number) {
+                botReply += `\nPhone:   ${info.phone_number}`;
+            }
 
-            await message.channel.send('```' + botReply + '```').catch(console.error);
+            botReply = '```' + botReply + '```';
         }
+        // Send output message
+        await message.channel.send(botReply).catch(console.error);
     };
 
     // Lookup target member from database

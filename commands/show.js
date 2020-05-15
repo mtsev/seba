@@ -4,7 +4,7 @@ const { categories, roles } = require('../config.json');
 module.exports = {
     name:        'show',
     description: 'Give verified members access to a category. Can be used in any channel.',
-    usage:       `(${Object.keys(categories.moveable).join('|')})`,
+    usage:       `<category>\n  category: ${Object.keys(categories.moveable).join(', ')}`,
     privileged:  true,
     execute:     execute
 };
@@ -15,15 +15,17 @@ async function execute(guild, message, args) {
     if (message.channel.type !== 'text') return;
 
     // Take one moveable category as argument
-    if (args.length !== 1 || !(args[0] in categories.moveable)) {
-        const botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}\``;
-        await message.reply(botReply).catch(console.error);
+    if (args.length !== 1 || !(args[0].toLowerCase() in categories.moveable)) {
+        const botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
+                       `${module.exports.usage}`;
+        const msg = await message.reply('```' + botReply + '```').catch(console.error);
+        await msg.delete({ timeout: 10000 }).catch(console.error);
         return;
     }
 
     // Get category object
-    const category = guild.channels.cache.get(categories.moveable[args[0]]);
+    const target = args[0].toLowerCase();
+    const category = guild.channels.cache.get(categories.moveable[target]);
     const permsTable = [];
 
     try {
@@ -61,11 +63,11 @@ async function execute(guild, message, args) {
         console.table(permsTable);
 
         // Success message
-        const botReply = `${category.name} is now visible and accessible` +
+        const botReply = `${category.name} is now visible and accessible ` +
                        'for verified members';
-        await message.reply(botReply).catch(console.error);
+        await message.channel.send(botReply).catch(console.error);
     } catch (error) {
-        console.error(`Couldn't show '${args[0]}':`, error);
+        console.error(`Couldn't show '${target}':`, error);
         throw error;
     }
 }
