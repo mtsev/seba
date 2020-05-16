@@ -3,8 +3,9 @@ const { prefix } = require('../config.json');
 // Export command so it can be used
 module.exports = {
     name:        'help',
+    aliases:     ['commands'],
     description: 'Show this message. Can be used in any channel or DM.',
-    usage:       '[commands...]',
+    usage:       '[command name]',
     privileged:  false,
     execute:     execute
 };
@@ -28,13 +29,17 @@ async function execute(guild, message, args) {
 
     else {
         const name = args[0].toLowerCase();
-        const command = commands.get(name);
+        const command = commands.get(name) ||
+            commands.find(cmd => cmd.aliases && cmd.aliases.includes(name));
 
         if (!command) {
             return message.channel.send(`No command called \`${name}\` found.`);
         }
 
         data.push('```');
+        if (command.name !== name) {
+            data.push(`(Alias for '${command.name}')\n`);
+        }
         if (command.usage) {
             data.push(`${customPrefix}${command.name} ${command.usage}\n`);
         }
@@ -44,8 +49,10 @@ async function execute(guild, message, args) {
         if (command.description) {
             data.push(command.description);
         }
-        if (!command.privileged) {
-            data.push(`\nCan be called with '${prefix}${command.name}' ` +
+        // We want 'verify' to accept default prefix since that's hardcoded
+        // in the email sent by the google form.
+        if (!command.name === 'verify') {
+            data.push(`\nCan be called with '${prefix}verify' ` +
                       'regardless of prefix setting.');
         }
         data.push('```');

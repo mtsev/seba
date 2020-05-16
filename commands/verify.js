@@ -29,7 +29,7 @@ async function execute(guild, message, args) {
     // Invalid code entered
     if (args.length === 0 || !args[0].match(/[\d]{6}/)) {
         botReply = 'Please enter a valid verification code. ' +
-                'It should be in this format: `!verify xxxxxx`';
+                   'It should be in this format: `!verify xxxxxx`';
     }
 
     // Member is already verified

@@ -17,7 +17,7 @@ async function execute(guild, message, args) {
     // Accepts at least 3 arguments: subcommand, emoji and role
     if (args.length < 3 || !['add', 'remove', 'set'].includes(args[0])) {
         botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}`;
+                   `${module.exports.usage}`;
         const msg = await message.reply('```' + botReply + '```').catch(console.error);
         await msg.delete({ timeout: 10000 }).catch(console.error);
         return;

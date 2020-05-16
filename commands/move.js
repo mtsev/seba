@@ -50,7 +50,7 @@ async function execute(guild, message, args) {
     // Incorrect arguments supplied
     else {
         botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}`;
+                   `${module.exports.usage}`;
         const msg = await message.reply('```' + botReply + '```').catch(console.error);
         await msg.delete({ timeout: 10000 }).catch(console.error);
         return;

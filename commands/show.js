@@ -17,7 +17,7 @@ async function execute(guild, message, args) {
     // Take one moveable category as argument
     if (args.length !== 1 || !(args[0].toLowerCase() in categories.moveable)) {
         const botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}`;
+                         `${module.exports.usage}`;
         const msg = await message.reply('```' + botReply + '```').catch(console.error);
         await msg.delete({ timeout: 10000 }).catch(console.error);
         return;

@@ -17,8 +17,8 @@ function gamingMode(oldState, newState) {
     // member joins the lounge
     if (!oldLounge && newLounge) {
         setGameMode(newState.channel, newState.member);
-    } 
-    
+    }
+
     // member leaves the lounge
     else if (oldLounge && !newLounge) {
         setNormalMode(oldState.channel);

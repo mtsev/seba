@@ -4,6 +4,7 @@ const { getPad } = require('../modules/random.js');
 // Export command so it can be used
 module.exports = {
     name:        'check',
+    aliases:     ['getcode', 'code'],
     description: 'Check what the verification code of a given member is. ' +
                  'Can be used in verification channel and exec channels.',
     usage:      '<discord_name>',
@@ -22,7 +23,7 @@ async function execute(guild, message, args) {
     // Missing argument(s)
     if (args.length === 0) {
         botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}`;
+                   `${module.exports.usage}`;
         const msg = await message.reply('```' + botReply + '```').catch(console.error);
         await msg.delete({ timeout: 10000 }).catch(console.error);
         return;
