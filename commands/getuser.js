@@ -3,7 +3,7 @@ const { categories } = require('../config.json');
 // Export command so it can be used
 module.exports = {
     name:        'getuser',
-    aliases:     ['user', 'userinfo', 'info'],
+    aliases:     ['user', 'userinfo', 'info', 'lookup'],
     description: "Get a member's personal information from database. " +
                  'Can only be used in exec channels.',
     usage:      '<discord_name>',
@@ -65,7 +65,7 @@ async function execute(guild, message, args) {
     var sendOutput = async function (info) {
         // No info found for target member
         if (!info) {
-            botReply = `couldn't find \`${target.user.tag}\` ` +
+            botReply = `Couldn't find \`${target.user.tag}\` ` +
                        "in the database, user hasn't verified";
         }
 

@@ -1,8 +1,9 @@
-const { prefix, server, roles } = require('../config.json');
+const { prefix, server, channels, roles } = require('../config.json');
 
 // Export event so it can be used
 module.exports = async (client, message) => {
     await handleCommands(message);
+    await modmail(message);
 };
 
 // Command handler
@@ -54,4 +55,17 @@ async function handleCommands(message) {
         }
         await message.reply(botReply).catch(console.error);
     }
+}
+
+// Relay DMs to exec channel
+async function modmail(message) {
+    if (message.channel.type !== 'dm' || message.author.bot) return;
+
+    console.log(`Modmail received from ${message.author.tag}`);
+
+    const mail = `<${message.author.tag}> ${message.content}`;
+    const modchannel = message.client.channels.cache.get(channels.modmail);
+
+    modchannel.send('```markdown\n' + mail + '```').catch(console.error);
+    message.reply("We've received your message and we'll get back to you shortly.");
 }

@@ -18,7 +18,8 @@
     "channels": {
         "welcome": "",
         "rules": "",
-        "verify": ""
+        "verify": "",
+        "modmail": ""
     },
     "roles": {
         "verified": "",
