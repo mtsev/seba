@@ -59,7 +59,8 @@ async function handleCommands(message) {
 
 // Relay DMs to exec channel
 async function modmail(message) {
-    if (message.channel.type !== 'dm' || message.author.bot) return;
+    if (message.channel.type !== 'dm' || message.author.bot ||
+        message.content.startsWith(message.client.prefix)) return;
 
     console.log(`Modmail received from ${message.author.tag}`);
 
