@@ -16,11 +16,13 @@ function gamingMode(oldState, newState) {
 
     // member joins the lounge
     if (!oldLounge && newLounge) {
+        console.log(`voiceStateUpdate: ${newState.member.user.tag} joined lounge`);
         setGameMode(newState.channel, newState.member);
     }
 
     // member leaves the lounge
     else if (oldLounge && !newLounge) {
+        console.log(`voiceStateUpdate: ${newState.member.user.tag} left lounge`);
         setNormalMode(oldState.channel);
     }
 }

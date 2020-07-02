@@ -20,11 +20,13 @@ function gamingMode(oldPresence, newPresence) {
 
     // case: member starts playing league
     if (!oldLeague && newLeague) {
+        console.log(`presenceUpdate: ${newPresence.user.tag} started playing`);
         setGameMode(channel, newPresence.member);
     }
 
     // case: member stops playing league
     else if (oldLeague && !newLeague) {
+        console.log(`presenceUpdate: ${newPresence.user.tag} stopped playing`);
         setNormalMode(channel);
     }
 }

@@ -7,16 +7,22 @@ module.exports = {
 };
 
 function inGame(presence) {
+    console.log('Checking inGame for ' + presence.user.tag);
+
     let status = false;
     presence.activities.forEach(game => {
         if (game.name === lounge.game) {
             status = true;
         }
     });
+
+    console.log(status);
     return status;
 }
 
 async function setGameMode(channel, member) {
+    console.log('setGameMode for ', member.user.tag);
+
     // Get guild
     const guild = channel.guild;
 
@@ -39,6 +45,8 @@ async function setGameMode(channel, member) {
 }
 
 async function setNormalMode(channel) {
+    console.log('setNormalMode');
+
     // if the lounge isn't game mode, we can ignore
     if (channel.name !== lounge.gameMode) return;
 
