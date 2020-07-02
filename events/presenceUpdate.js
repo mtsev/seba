@@ -14,19 +14,21 @@ function gamingMode(oldPresence, newPresence) {
     if (newPresence.member.voice.channelID !== lounge.id) return;
     const channel = newPresence.member.voice.channel;
 
+    console.log(`presenceUpdate in lounge by ${newPresence.user.tag}`);
+
     // Check if league is in old and new presence
     const oldLeague = inGame(oldPresence);
     const newLeague = inGame(newPresence);
 
     // case: member starts playing league
     if (!oldLeague && newLeague) {
-        console.log(`presenceUpdate: ${newPresence.member.user.tag} started playing`);
+        console.log(`presenceUpdate: ${newPresence.user.tag} started playing`);
         setGameMode(channel, newPresence.member);
     }
 
     // case: member stops playing league
     else if (oldLeague && !newLeague) {
-        console.log(`presenceUpdate: ${newPresence.member.user.tag} stopped playing`);
+        console.log(`presenceUpdate: ${newPresence.user.tag} stopped playing`);
         setNormalMode(channel);
     }
 }
