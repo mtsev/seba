@@ -26,6 +26,11 @@ function show(guild) {
 
     // Make cron job to set up channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
+        // Edit the guild icon
+        guild.setIcon('./cursed_logo.png')
+            .then(updated => console.log('Changed to cursed guild icon'))
+            .catch(console.error);
+
         // Log cron job firing
         console.log('Showing late night channels...');
 
@@ -73,6 +78,11 @@ function hide(guild) {
 
     // Make new cron job to pack down channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
+        // Edit the guild icon
+        guild.setIcon('./juicebox_logo.png')
+            .then(updated => console.log('Changed to regular guild icon'))
+            .catch(console.error);
+
         // Log cron job firing
         console.log('Hiding late night channels...');
 
