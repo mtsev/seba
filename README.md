@@ -11,7 +11,6 @@ Main features:
 
 Optional extra features - disabled unless `extraConfig.json` exists:
 * "Late Nights" category which can only be accessed during a specific time period
-* "Gaming Mode" for the "lounge" voice channel which activates when anyone in lounge is playing a specific game
 
 ## Installation
 Download the source code from the [latest release](https://github.com/mtsev/seba/releases/latest).
@@ -62,9 +61,3 @@ To enable the extra features, copy `extraConfig.json.example` to `extraConfig.js
     - `id` is the ID of the "Late Nights" category
     - `start` is the starting time for access to the category in `HH:MM` format
     - `end` is the ending time for access to the category in `HH:MM` format
-
-* `lounge` has info for the Gaming Mode feature:
-    - `id` is the ID of the "lounge" voice channel
-    - `game` is the name of the game for this feature to activate on
-    - `gameMode` is the name of the channel when Gaming Mode is active
-    - `normalMode` is the name of the channel normally

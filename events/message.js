@@ -10,6 +10,15 @@ async function handleCommands(message) {
     // Ignore messages from bots
     if (message.author.bot) return;
 
+    // If seba gets pinged, reply with prefix
+    if (message.mentions.has(message.client.user)) {
+        let prefixMessage = `My prefix is \`${message.client.prefix}\`. A list of my commands can be found with \`${message.client.prefix}`;
+        if (/[a-zA-Z0-9]$/.test(message.client.prefix)) prefixMessage += ' ';
+        prefixMessage += 'help.`';
+        await message.channel.send(prefixMessage).catch(console.error);
+        return;
+    }
+
     // We want 'verify' to accept default prefix since that's hardcoded
     // in the email sent by the google form.
     let commandPrefix;

@@ -27,9 +27,10 @@ function show(guild) {
     // Make cron job to set up channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
         // Edit the guild icon
-        guild.setIcon('../static/cursed_logo.png')
-            .then(updated => console.log('Changed to cursed guild icon'))
-            .catch(console.error);
+        await guild.setIcon('./static/cursed_logo.png').catch(console.error);
+
+        // Add wenkiss emoji
+        await guild.emojis.create('./static/wenkiss.png', 'wenkiss').catch(console.error);
 
         // Log cron job firing
         console.log('Showing late night channels...');
@@ -79,9 +80,11 @@ function hide(guild) {
     // Make new cron job to pack down channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
         // Edit the guild icon
-        guild.setIcon('../static/lofi_girl.gif')
-            .then(updated => console.log('Changed to regular guild icon'))
-            .catch(console.error);
+        await guild.setIcon('./static/lofi_girl.gif').catch(console.error);
+
+        // Remove wenkiss emoji
+        const wenkiss = guild.emojis.cache.find(emoji => emoji.name === 'wenkiss');
+        await wenkiss.delete().catch(console.error);
 
         // Log cron job firing
         console.log('Hiding late night channels...');

@@ -26,7 +26,7 @@ async function execute(guild, message, args) {
     // Get category object
     const target = args[0].toLowerCase();
     const category = guild.channels.cache.get(categories.moveable[target]);
-    const position = guild.channels.cache.get(categories.exec).position + 1;
+    const position = guild.channels.cache.get(categories.archive).position - 1;
     const permsTable = [];
 
     try {
