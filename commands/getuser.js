@@ -31,7 +31,7 @@ async function execute(guild, message, args) {
     }
 
     // Concatenate all arguments into a single string
-    const arg = args.join(' ').toLowerCase();
+    const arg = args.join(' ').toLowerCase().replace('\n', '');
 
     // Parse argument to get target member
     let target;
@@ -39,24 +39,21 @@ async function execute(guild, message, args) {
 
     if (taggedUser) {
         target = guild.member(taggedUser);
-    } else if (arg.includes('#')) {
-        target = guild.members.cache
-            .find(member => member.user.tag.toLowerCase() === arg);
     } else {
         target = guild.members.cache
-            .find(member => member.user.username.toLowerCase() === arg);
+            .find(member => member.user.tag.toLowerCase().includes(arg));
     }
 
     // Check if the name entered was a nickname
     if (!target) {
         target = guild.members.cache
             .find(member => member.nickname &&
-                member.nickname.toLowerCase() === arg);
+                member.nickname.toLowerCase().includes(arg));
     }
 
     // Check that the target member is actually in the server
     if (!target) {
-        botReply = `Couldn't find \`${arg}\` in the server`;
+        botReply = `Couldn't find user containing \`${arg}\` in the server`;
         await message.channel.send(botReply).catch(console.error);
         return;
     }
@@ -72,8 +69,11 @@ async function execute(guild, message, args) {
         // Send formatted info to channel
         else {
             // Formatted string of member information
-            botReply = `Name:    ${info.real_name}\nDiscord: ` +
-                       `${target.user.tag}\nEmail:   ${info.email_address}`;
+            botReply = `Name:    ${info.real_name}\nDiscord: ${target.user.tag}`;
+            if (target.nickname) {
+                botReply += ` (${target.nickname})`;
+            }
+            botReply += `\nEmail:   ${info.email_address}`;
 
             // Add zID if it was in the database
             if (info.zid) {
