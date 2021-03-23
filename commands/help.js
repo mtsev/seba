@@ -37,8 +37,8 @@ async function execute(guild, message, args) {
         }
 
         data.push('```');
-        if (command.name !== name) {
-            data.push(`(Alias for '${command.name}')\n`);
+        if (command.aliases) {
+            data.push(`(Aliases: ${command.aliases.join(', ')})\n`);
         }
         if (command.usage) {
             data.push(`${customPrefix}${command.name} ${command.usage}\n`);
