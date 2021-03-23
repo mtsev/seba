@@ -32,6 +32,12 @@ function show(guild) {
         // Add wenkiss emoji
         await guild.emojis.create('./static/wenkiss.png', 'wenkiss').catch(console.error);
 
+        // Un-verify Melody
+        const nut = guild.members.cache.find(member => member.user.tag === 'nut#3000');
+        const nutcam = guild.members.cache.find(member => member.user.tag === 'nutcam#7808');
+        await nut.roles.remove(roles.verified).catch(console.error);
+        await nutcam.roles.remove(roles.verified).catch(console.error);
+
         // Log cron job firing
         console.log('Showing late night channels...');
 
@@ -85,6 +91,12 @@ function hide(guild) {
         // Remove wenkiss emoji
         const wenkiss = guild.emojis.cache.find(emoji => emoji.name === 'wenkiss');
         await wenkiss.delete().catch(console.error);
+
+        // Re-verify Melody
+        const nut = guild.members.cache.find(member => member.user.tag === 'nut#3000');
+        const nutcam = guild.members.cache.find(member => member.user.tag === 'nutcam#7808');
+        await nut.roles.add(roles.verified).catch(console.error);
+        await nutcam.roles.add(roles.verified).catch(console.error);
 
         // Log cron job firing
         console.log('Hiding late night channels...');
