@@ -4,8 +4,8 @@ const { categories } = require('../config.json');
 module.exports = {
     name:        'archive',
     description: 'Move all channels in target category to archive category. ' +
-                 "Default target is 'events'. Can be used in any channel.",
-    usage:      `[(${Object.keys(categories.moveable).join('|')})]`,
+                 'Can be used in any channel.',
+    usage:      `<category>\n  category: ${Object.keys(categories.moveable).join(', ')}`,
     privileged: true,
     execute:    execute
 };
@@ -15,21 +15,18 @@ async function execute(guild, message, args) {
     // Ignore DMs
     if (message.channel.type !== 'text') return;
 
-    // Optionally take one argument
-    if ((args.length === 1 && !(args[0] in categories.moveable)) || args.length > 1) {
-        const botReply = `\`usage: ${message.client.prefix}${module.exports.name} ` +
-                       `${module.exports.usage}\``;
-        await message.reply(botReply).catch(console.error);
+    // Take one moveable category as argument
+    if (args.length !== 1 || !(args[0].toLowerCase() in categories.moveable)) {
+        const botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
+                         `${module.exports.usage}`;
+        const msg = await message.reply('```' + botReply + '```').catch(console.error);
+        await msg.delete({ timeout: 10000 }).catch(console.error);
         return;
     }
 
-    // Default target is 'events'
-    const target = args[0] ? args[0] : 'events';
-
-    // Get target category
+    // Get categories
+    const target = args[0].toLowerCase();
     const category = guild.channels.cache.get(categories.moveable[target]);
-
-    // Get archive category
     const archive = guild.channels.cache.get(categories.archive);
 
     // Move all channels and sync permissions to archive
@@ -49,5 +46,5 @@ async function execute(guild, message, args) {
     }
 
     const botReply = `${category.name} has been archived`;
-    await message.reply(botReply).catch(console.error);
+    await message.channel.send(botReply).catch(console.error);
 }

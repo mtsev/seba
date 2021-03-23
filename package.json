@@ -1,11 +1,11 @@
 {
   "name": "seba",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Bot for UNSW lo-fi society Discord server",
   "main": "seba.js",
   "dependencies": {
     "cron": "^1.8.2",
-    "discord.js": "^12.2.0",
+    "discord.js": "^12.5.1",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
@@ -25,7 +25,7 @@
   },
   "keywords": [],
   "author": "Mandy Tao",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mtsev/seba/issues"
   },

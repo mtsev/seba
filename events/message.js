@@ -10,28 +10,34 @@ async function handleCommands(message) {
     // Ignore messages from bots
     if (message.author.bot) return;
 
-    // Get prefix for client
-    const customPrefix = message.client.prefix;
+    // If seba gets pinged, reply with prefix
+    if (message.mentions.has(message.client.user)) {
+        let prefixMessage = `My prefix is \`${message.client.prefix}\`. A list of my commands can be found with \`${message.client.prefix}`;
+        if (/[a-zA-Z0-9]$/.test(message.client.prefix)) prefixMessage += ' ';
+        prefixMessage += 'help.`';
+        await message.channel.send(prefixMessage).catch(console.error);
+        return;
+    }
 
-    // Check whether default or custom prefix is being used
-    if (message.content.startsWith(customPrefix)) {
-        var usedPrefix = customPrefix;
-    } else if (message.content.startsWith(prefix)) {
-        var usedPrefix = prefix;
+    // We want 'verify' to accept default prefix since that's hardcoded
+    // in the email sent by the google form.
+    let commandPrefix;
+    if (message.content.startsWith(prefix + 'verify')) {
+        commandPrefix = prefix;
+    } else if (message.content.startsWith(message.client.prefix)) {
+        commandPrefix = message.client.prefix;
     } else {
         return;
     }
 
     // Parse message
-    const args = message.content.slice(usedPrefix.length).trim().split(/ +/);
+    const args = message.content.slice(commandPrefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-    const command = message.client.commands.get(commandName);
+    const command = message.client.commands.get(commandName) ||
+        message.client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
     // Ignore invalid command
     if (!command) return;
-
-    // Only allow non-privileged commands to use default prefix
-    if (command.privileged && usedPrefix !== customPrefix) return;
 
     // Get guild
     const guild = message.client.guilds.cache.get(server.id);

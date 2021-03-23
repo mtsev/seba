@@ -12,8 +12,9 @@ module.exports = async (client, member) => {
 // Send welcome message
 async function welcome(member) {
     const message = `Welcome to ${server.name}, ${member}! ` +
-            `Please read the <#${channels.rules}> and verify yourself to start chatting.`;
-    await member.guild.channels.cache.get(channels.welcome).send(message).catch(console.error);
+        `Please read the <#${channels.rules}> and verify yourself to start chatting.`;
+    await member.guild.channels.cache.get(channels.welcome)
+        .send(message).catch(console.error);
 }
 
 // Persistent verification

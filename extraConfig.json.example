@@ -3,11 +3,5 @@
         "id": "",
         "start": "00:00",
         "end": "06:00"
-    },
-    "lounge": {
-        "id": "",
-        "game": "League of Legends",
-        "gameMode": "Lounge of Legends",
-        "normalMode": "lounge"
     }
 }

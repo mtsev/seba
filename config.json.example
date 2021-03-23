@@ -18,7 +18,7 @@
     "channels": {
         "welcome": "",
         "rules": "",
-        "verify": ""
+        "verify": "",
     },
     "roles": {
         "verified": "",
