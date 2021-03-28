@@ -102,7 +102,7 @@ function hide(guild) {
         console.log('Hiding late night channels...');
 
         const category = guild.channels.cache.get(latenights.id);
-        const position = guild.channels.cache.get(categories.exec).position + 1;
+        const position = guild.channels.cache.get(categories.archive).position + 1;
         const permsTable = [];
 
         try {
