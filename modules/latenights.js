@@ -86,7 +86,11 @@ function hide(guild) {
     // Make new cron job to pack down channels and return job for main to run
     return new CronJob(`00 ${i} ${H} * * *`, async () => {
         // Edit the guild icon
-        await guild.setIcon('./static/lofi_girl.gif').catch(console.error);
+        await guild.setIcon('./static/april_jess.jpg').catch(console.error);
+
+        // APRIL FOOLS DAY 1
+        await guild.setBanner('./static/april_banner.png').catch(console.error);
+        await guild.setName('UNSW HARDSTYLE SOCIETY');
 
         // Remove wenkiss emoji
         const wenkiss = guild.emojis.cache.find(emoji => emoji.name === 'wenkiss');
