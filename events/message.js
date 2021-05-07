@@ -11,7 +11,7 @@ async function handleCommands(message) {
     if (message.author.bot) return;
 
     // If seba gets pinged, reply with prefix
-    if (message.mentions.has(message.client.user)) {
+    if (message.mentions.has(message.client.user, { ignoreRoles: true, ignoreEveryone: true })) {
         let prefixMessage = `My prefix is \`${message.client.prefix}\`. A list of my commands can be found with \`${message.client.prefix}`;
         if (/[a-zA-Z0-9]$/.test(message.client.prefix)) prefixMessage += ' ';
         prefixMessage += 'help.`';
