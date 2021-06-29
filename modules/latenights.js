@@ -88,10 +88,6 @@ function hide(guild) {
         // Edit the guild icon
         await guild.setIcon('./static/lofi_girl.gif').catch(console.error);
 
-        // Revert April Fools stuff
-        await guild.setBanner('./static/regular_banner.png').catch(console.error);
-        await guild.setName('unsw lo-fi;').catch(console.error);
-
         // Remove wenkiss emoji
         const wenkiss = guild.emojis.cache.find(emoji => emoji.name === 'wenkiss');
         await wenkiss.delete().catch(console.error);
