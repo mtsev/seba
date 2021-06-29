@@ -32,6 +32,9 @@ function show(guild) {
         // Add wenkiss emoji
         await guild.emojis.create('./static/wenkiss.png', 'wenkiss').catch(console.error);
 
+        // Add mlem emoji
+        await guild.emojis.create('./static/mlem.gif', 'mlem').catch(console.error);
+
         // Un-verify Melody
         const nut = guild.members.cache.find(member => member.user.tag === 'nut#3000');
         const nutcam = guild.members.cache.find(member => member.user.tag === 'nutcam#7808');
@@ -91,6 +94,10 @@ function hide(guild) {
         // Remove wenkiss emoji
         const wenkiss = guild.emojis.cache.find(emoji => emoji.name === 'wenkiss');
         await wenkiss.delete().catch(console.error);
+
+        // Remove mlem emoji
+        const mlem = guild.emojis.cache.find(emoji => emoji.name === 'mlem');
+        await mlem.delete().catch(console.error);
 
         // Re-verify Melody
         const nut = guild.members.cache.find(member => member.user.tag === 'nut#3000');
