@@ -4,13 +4,15 @@ Verification and server management bot for UNSW lo-fi society's Discord server.
 Seba can also optionally use a MySQL database to access to members' information directly from Discord, even if their Discord username has since changed from when they first verified. See instructions in the [database directory](database) if you want to enable this.
 
 Main features:
-* Welcomes new members in dedicated welcome channel when they join the server
-* Command for members to verify using a code emailed by [this google script](https://github.com/mtsev/seba-form-script) and updates their roles
-* Commands to show, hide, and archive categories to easily manage categories for Discord events
-* Command to move all members from one voice channel to another
+* Welcomes new members in dedicated welcome channel when they join the server.
+* Command for members to verify using a code emailed by [this google script](https://github.com/mtsev/seba-form-script) and updates their roles.
+* Persistent verification for members rejoining the server, but does not preserve any other role.
+* Commands to show, hide, and archive categories to easily manage categories for Discord events.
+* Command to move all members from one voice channel to another.
 
 Optional extra features - disabled unless `extraConfig.json` exists:
-* "Late Nights" category which can only be accessed during a specific time period
+* "Late Nights" category which can only be accessed during a specific time period.
+* Updates server icon and enables specific custom emojis during this period.
 
 ## Installation
 Download the source code from the [latest release](https://github.com/mtsev/seba/releases/latest).

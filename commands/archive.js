@@ -6,15 +6,12 @@ module.exports = {
     description: 'Move all channels in target category to archive category. ' +
                  'Can be used in any channel.',
     usage:      `<category>\n  category: ${Object.keys(categories.moveable).join(', ')}`,
-    privileged: true,
+    privileged: false,
     execute:    execute
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
-    // Ignore DMs
-    if (message.channel.type !== 'text') return;
-
     // Take one moveable category as argument
     if (args.length !== 1 || !(args[0].toLowerCase() in categories.moveable)) {
         const botReply = `usage: ${message.client.prefix}${module.exports.name} ` +

@@ -5,15 +5,12 @@ module.exports = {
     name:        'hide',
     description: 'Hide category from verified members. Can be used in any channel.',
     usage:       `<category>\n  category: ${Object.keys(categories.moveable).join(', ')}`,
-    privileged:  true,
+    privileged:  false,
     execute:     execute
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
-    // Ignore DMs
-    if (message.channel.type !== 'text') return;
-
     // Invalid arguments given
     if (args.length !== 1 || !(args[0].toLowerCase() in categories.moveable)) {
         const botReply = `usage: ${message.client.prefix}${module.exports.name} ` +

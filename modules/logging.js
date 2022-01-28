@@ -1,3 +1,7 @@
+/***
+ * This module prepends a timestamp to console messages and provides
+ * a custom format for tables.
+ */
 var util = require('util');
 
 /* timestamp format */

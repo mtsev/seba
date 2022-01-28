@@ -1,4 +1,6 @@
-// Generate n-digit OTP for verification
+/***
+ * Generate n-digit OTP for verification
+ */
 module.exports = {
     getPad: function (string, n) {
 

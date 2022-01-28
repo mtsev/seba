@@ -4,7 +4,7 @@ const { prefix } = require('../config.json');
 module.exports = {
     name:        'help',
     aliases:     ['commands'],
-    description: 'Show this message. Can be used in any channel or DM.',
+    description: 'Show this message. Can be used in any channel.',
     usage:       '[command name]',
     privileged:  false,
     execute:     execute

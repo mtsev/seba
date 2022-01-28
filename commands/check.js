@@ -1,4 +1,4 @@
-const { categories, channels, roles, seed } = require('../config.json');
+const { roles, seed } = require('../config.json');
 const { getPad } = require('../modules/random.js');
 
 // Export command so it can be used
@@ -15,10 +15,6 @@ module.exports = {
 // Actual command to execute
 async function execute(guild, message, args) {
     let botReply;
-
-    // Ignore messages outside verification channel or exec channels
-    if (message.channel.parentID !== categories.exec &&
-        message.channel.id !== channels.verify) return;
 
     // Missing argument(s)
     if (args.length === 0) {

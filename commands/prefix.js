@@ -4,15 +4,12 @@ module.exports = {
     aliases:     ['setprefix'],
     description: 'Change the prefix for bot commands. Can be used in any channel.',
     usage:       '<new prefix>',
-    privileged:  true,
+    privileged:  false,
     execute:     execute
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
-    // Ignore DMs
-    if (message.channel.type !== 'text') return;
-
     // Missing argument(s)
     if (args.length === 0) {
         const botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
