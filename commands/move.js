@@ -23,14 +23,19 @@ async function execute(guild, message, args) {
 
     // Source is user's current voice channel.
     const fromChannel = guild.member(message).voice.channel;
-    const toChannel = guild.channels.cache
-        .find(channel => channel.type !== 'voice' &&
-            channel.name.toLowerCase().contains(args.join(' ').toLowerCase()));
-
-    // Check that both source and destination voice channels exist
     if (!fromChannel) {
         botReply = 'Please join voice channel to move from.';
-    } else if (!toChannel) {
+        await message.channel.send(botReply).catch(console.error);
+        return;
+    }
+
+    // Get the destination channel and make sure it actually exists.
+    const toChannel = guild.channels.cache.find(
+        channel => channel.type === 'voice' &&
+        channel.name !== fromChannel.name &&
+        channel.name.toLowerCase().includes(args.join(' ').toLowerCase()));
+
+    if (!toChannel) {
         botReply = `Couldn't find voice channel \`${args.join(' ')}\``;
     }
 
