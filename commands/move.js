@@ -1,7 +1,8 @@
 // Export command so it can be used
 module.exports = {
     name:        'move',
-    description: 'Move all members from one voice channel to another. ' +
+    description: 'Move all members in your current voice channel to another. ' +
+                 'If destination channel name contains emojis, leave them out. ' +
                  'Can be used in any channel.',
     usage:      '<dest_channel>',
     privileged: false,
