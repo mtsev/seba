@@ -30,9 +30,11 @@ async function execute(guild, message, args) {
     // 1. No argument provided. Hide the category that the command was sent in.
     if (args.length === 0) {
         // Check that the category is not locked.
-        if (message.channel.parentID in Object.values(categories.locked)) {
-            const botReply = `Cannot show locked category '${message.channel.name}''`;
-            await message.channel.send(botReply).catch(console.error);
+        if (Object.values(categories.locked).includes(message.channel.parentID)) {
+            const botReply = `Cannot hide locked category \`${message.channel.parent.name}\``;
+            const msg = await message.channel.send(botReply).catch(console.error);
+            await msg.delete({ timeout: 2000 }).catch(console.error);
+            console.log(botReply);
             return;
         }
 
@@ -46,6 +48,7 @@ async function execute(guild, message, args) {
         if (!(args[0].toLowerCase() in categories.events)) {
             const botReply = `Unknown events category '${args[0]}'.`;
             await message.channel.send(botReply).catch(console.error);
+            console.log(botReply);
             return;
         }
 
