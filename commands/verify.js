@@ -30,6 +30,7 @@ async function execute(guild, message, args) {
     if (args.length === 0 || !args[0].match(/[\d]{6}/)) {
         botReply = 'Please enter a valid verification code. ' +
                    'It should be in this format: `!verify xxxxxx`';
+        console.log(`Invalid code DM sent to ${message.author.tag}`);
     }
 
     // Member is already verified
@@ -72,6 +73,7 @@ async function execute(guild, message, args) {
             'into the form and try again.\n' +
             `3. Ping an @exec in the #${verification} channel or email us ` +
             `at ${server.email} if it's still not working.`;
+        console.log(`Incorrect code DM sent to ${message.author.tag}`);
     }
 
     // Send DM message to member

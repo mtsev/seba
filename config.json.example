@@ -10,9 +10,13 @@
     "categories": {
         "exec": "",
         "archive": "",
-        "moveable": {
+        "events": {
             "events1": "",
             "events2": ""
+        },
+        "locked": {
+            "locked1": "",
+            "locked2": ""
         }
     },
     "channels": {

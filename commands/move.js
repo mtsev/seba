@@ -22,6 +22,9 @@ async function execute(guild, message, args) {
         return;
     }
 
+    // Concatenate all arguments into a single string
+    const arg = args.join(' ').toLowerCase();
+
     // Source is user's current voice channel.
     const fromChannel = guild.member(message).voice.channel;
     if (!fromChannel) {
@@ -31,17 +34,15 @@ async function execute(guild, message, args) {
     }
 
     // Get the destination channel and make sure it actually exists.
-    const toChannel = guild.channels.cache.find(
-        channel => channel.type === 'voice' &&
+    const toChannel = guild.channels.cache.find(channel =>
+        channel.type === 'voice' &&
         channel.name !== fromChannel.name &&
-        channel.name.toLowerCase().includes(args.join(' ').toLowerCase()));
+        channel.name.toLowerCase().includes(arg.toLowerCase()));
 
     if (!toChannel) {
-        botReply = `Couldn't find voice channel \`${args.join(' ')}\``;
-    }
-
-    // Otherwise, good to go! Let's move everyone.
-    else {
+        botReply = `Couldn't find voice channel \`${arg}\``;
+    } else {
+        // Good to go! Let's move everyone.
         // Beware the rate limit. Hasn't been an issue recently but was before.
         for (const member of fromChannel.members.values()) {
             try {

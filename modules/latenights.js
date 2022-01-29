@@ -1,6 +1,6 @@
 /***
  * This module only exports one function: setup.
- * 
+ *
  * The latenight feature runs as cron jobs, so we only need to run the
  * setup and the rest is handled internally.
  */

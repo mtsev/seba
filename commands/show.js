@@ -3,16 +3,17 @@ const { categories, roles } = require('../config.json');
 // Export command so it can be used
 module.exports = {
     name:        'show',
-    description: 'Give verified members access to a category. Can be used in any channel.',
-    usage:       `<category>\n  category: ${Object.keys(categories.moveable).join(', ')}`,
-    privileged:  false,
-    execute:     execute
+    description: 'Give verified members access to a category. If no category is given, ' +
+                 'will show the category that the command was sent in.',
+    usage:      `[category]\n  category: ${Object.keys(categories.events).join(', ')}`,
+    privileged: false,
+    execute:    execute
 };
 
 // Actual command to execute
 async function execute(guild, message, args) {
-    // Take one moveable category as argument
-    if (args.length !== 1 || !(args[0].toLowerCase() in categories.moveable)) {
+    // Invalid number of arguments given
+    if (args.length > 1) {
         const botReply = `usage: ${message.client.prefix}${module.exports.name} ` +
                          `${module.exports.usage}`;
         const msg = await message.reply('```' + botReply + '```').catch(console.error);
@@ -20,10 +21,36 @@ async function execute(guild, message, args) {
         return;
     }
 
-    // Get category object
-    const target = args[0].toLowerCase();
-    const category = guild.channels.cache.get(categories.moveable[target]);
+    let target;
+    let category;
     const permsTable = [];
+
+    // Two valid modes of operation:
+    // 1. No argument provided. Show the category that the command was sent in.
+    if (args.length === 0) {
+        // Check that the category is not locked.
+        if (message.channel.parentID in Object.values(categories.locked)) {
+            const botReply = `Cannot show locked category '${message.channel.name}''`;
+            await message.channel.send(botReply).catch(console.error);
+            return;
+        }
+
+        target = 'message category';
+        category = message.channel.parent;
+    }
+
+    // 2. Show the category identified by the tag in the argument.
+    else {
+        // Check that the argument is a known category tag.
+        if (!(args[0].toLowerCase() in categories.events)) {
+            const botReply = `Unknown events category '${args[0]}'.`;
+            await message.channel.send(botReply).catch(console.error);
+            return;
+        }
+
+        target = args[0].toLowerCase();
+        category = guild.channels.cache.get(categories.events[target]);
+    }
 
     try {
         // Move category into position
